@@ -44,7 +44,7 @@
       margin-bottom: 5px;
     }
 
-    input, select, textarea {
+    input, select, textarea, option {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -307,6 +307,7 @@
       margin-top: 5px;
       white-space: nowrap; /* ✅ 줄 바꿈 방지 */
     }
+
   </style>
 
   <script>
@@ -346,8 +347,7 @@
 
     <div class="form-group">
       <label for="postContent">내용</label>
-      <textarea id="postContent" name="postContent"
-                placeholder="생활방식,음주여부,애완동물 여부,흡연 여부 등 사람들에게 알릴 것을 입력해주세요." required th:value="${post.rmBoardTitle}"></textarea>
+      <textarea id="postContent" name="postContent" placeholder="생활방식,음주여부,애완동물 여부,흡연 여부 등 사람들에게 알릴 것을 입력해주세요." required th:text="${post.postContent}"></textarea>
     </div>
 
     <!-- 방 있음일 경우에만 금액, 보증금 입력란 표시 -->
@@ -382,8 +382,6 @@
             <label for="morning">아침형 인간</label>
           </div>
         </div>
-
-        <!-- ✅ 오른쪽 열 -->
         <div class="radio-column">
           <div class="radio-item">
             <input type="radio" id="smoking_no" name="smoking" value="false">
@@ -399,37 +397,7 @@
           </div>
         </div>
       </div>
-
-
-      <div>
-        <div class="form-group">
-          <h3>현재 업로드된 사진</h3>
-          <th:block th:if="${post.photoUrls != null and not #lists.isEmpty(post.photoUrls)}">
-            <div>
-              <div class="uploaded-images">
-                <th:block th:each="photoUrl : ${post.photoUrls}">
-                  <div class="image-item">
-                    <img th:src="@{${photoUrl}}" alt="게시글 이미지">
-                    <div class="delete-container">
-                      <input type="checkbox" name="deleteImages" th:value="${photoUrl}">
-                      <label>삭제</label>
-                    </div>
-                  </div>
-                </th:block>
-              </div>
-            </div>
-          </th:block>
-        </div>
-
-        <div class="form-group">
-          <label for="newPhotos">새로운 사진 추가</label>
-          <input type="file" id="newPhotos" name="newPhotos" accept="image/*" multiple onchange="previewImages(event)">
-        </div>
-
-        <!-- ✅ 사진 미리보기 영역 -->
-        <div id="preview-container" class="uploaded-images"></div>
-
-        <br><br>
+    </div>
 
         <!-- 지역 선택 -->
         <div class="form-group">
@@ -465,10 +433,8 @@
           <a th:href="@{/board/post/{id}(id=${post.rmPostId})}" class="btn btn-cancel">취소</a>
         </div>
   </form>
-
-
-
 </div>
+
 <script>
   toggleFields(); // 페이지 로드 시 올바른 필드 표시
 
@@ -521,6 +487,19 @@
     previewImages({ target: fileInput });
   }
 
+  function toggleFields() {
+    var category = document.getElementById("category").value;
+    var extraFields = document.getElementById("extraFields");
+    var imageFields = document.getElementById("imageFields"); // ✅ 사진 관련 필드
+
+    if (category === "방 있음") {
+      extraFields.style.display = "block";
+      imageFields.style.display = "block"; // ✅ 사진 추가 보이기
+    } else {
+      extraFields.style.display = "none";
+      imageFields.style.display = "none"; // ✅ 사진 추가 숨기기
+    }
+  }
 
 </script>
 
