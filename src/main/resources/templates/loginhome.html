@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>로그인 후 홈</title>
+
+    <style>
+        /* ✅ 전체 페이지 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F9FA;
+            box-sizing: border-box;
+        }
+        .container {
+            margin: 0 auto;
+            padding: 0;
+            max-width: 1200px;
+        }
+        /* ✅ 네비게이션 바 스타일 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: #505D96;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #505D96;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            gap: 50px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #777E90;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .nav-links a:hover {
+            color: #505D96;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .icons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .icons img {
+            width: 30px;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .icons img:hover {
+            transform: scale(1.1);
+        }
+
+        .user-menu {
+            font-weight: bold;
+            color: #505D96;
+        }
+
+        .user-menu img {
+            width: 20px;
+            height: auto;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            min-width: 150px;
+            z-index: 10;
+            margin-top: 40px;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #777E90;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* ✅ 배너 스타일 */
+        .banner {
+            position: relative;
+            width: 120%;
+            max-width: 1400px;
+            height: 450px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 100px;
+        }
+
+        .banner img {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .banner-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .banner-arrow img {
+            width: 50px;
+            height: auto;
+        }
+
+        .left-arrow {
+            left: 20px;
+        }
+
+        .right-arrow {
+            right: 20px;
+        }
+
+        .spacing {
+            height: 500px;
+        }
+
+        /* ✅ 청년 주택 꿀팁 스타일 */
+        .housing-tips {
+            margin: 10px auto;
+            padding: 15px;
+            background-color: #EEF3F7;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .housing-tips h2 {
+            font-size: 2em;
+            color: #3A4A7A;
+            margin-bottom: 30px;
+        }
+
+        .tips-grid {
+            display: flex;
+            justify-content: space-between; /* ✅ 가로로 균등 정렬 */
+            gap: 20px; /* ✅ 카드 간격 유지 */
+            flex-wrap: nowrap; /* ✅ 한 줄에 무조건 배치 */
+            width: 100%;
+            max-width: 1200px; /* ✅ 최대 너비 제한 */
+            margin: 0 auto; /* ✅ 가운데 정렬 */
+        }
+
+        .tip-card {
+            width: 25%; /* ✅ 한 줄에 4개 배치 */
+            min-width: 250px; /* ✅ 최소 크기 제한 */
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .tips-container {
+            overflow-x: auto; /* ✅ 가로 스크롤 허용 */
+            white-space: nowrap; /* ✅ 카드가 줄 바꿈되지 않도록 */
+            width: 100%;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .tip-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .tip-card h3 {
+            margin: 20px 0 10px;
+            color: #2F3D6E;
+            font-weight: bold;
+        }
+
+        .tip-card p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .tip-card a {
+            text-decoration: none;
+            color: #3A4A7A;
+            font-weight: bold;
+        }
+
+        .tip-card a:hover {
+            text-decoration: underline;
+        }
+        /* ✅ 모달 전체 스타일 (배경 블러 처리 추가) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+            backdrop-filter: blur(5px); /* 블러 효과 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ✅ 모달 콘텐츠 스타일 (반응형 적용) */
+        .modal-content {
+            background-color: white;
+            margin: 5% auto; /* ✅ 화면 중앙 정렬 */
+            padding: 30px 20px;
+            border-radius: 10px;
+            width: 80%; /* ✅ 화면 크기에 맞게 조정 (PC) */
+            max-width: 600px; /* ✅ 최대 너비 설정 */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            animation: fadeIn 0.3s ease-in-out;
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            max-height: 90vh; /* ✅ 화면 크기에 맞게 자동 조정 */
+            overflow-y: scroll; /* ✅ 내부에서 세로 스크롤 가능하도록 설정 */
+            overflow-x: hidden; /* ✅ 가로 스크롤 제거 */
+            scrollbar-width: none; /* ✅ Firefox에서 스크롤바 숨기기 */
+            -ms-overflow-style: none; /* ✅ Internet Explorer에서 스크롤바 숨기기 */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* ✅ 부드러운 그림자 효과 */
+            text-align: center; /* ✅ 기본적으로 텍스트를 가운데 정렬 */
+            padding-bottom: 100px; /* ✅ 모달 내용 아래쪽 여백 추가 */
+        }
+
+        /* ✅ 리스트와 내용 요소 아래 여백 추가 */
+        .modal-content h2,
+        .modal-content h3,
+        .modal-content p,
+        .modal-content ul,
+        .modal-content ol {
+            margin-bottom: 20px; /* ✅ 요소들 간 여백 추가 */
+        }
+
+        /* ✅ 버튼과 링크에도 여백 추가 */
+        .modal-content a,
+        .modal-content button {
+            margin-bottom: 30px; /* ✅ 버튼 및 링크 하단 여백 추가 */
+        }
+        .modal-content::-webkit-scrollbar {
+            display: none;
+        }
+        .modal-content h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #505D96;
+            margin-bottom: 15px;
+            text-align : center;
+        }
+        .modal-content h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #505D96;
+            margin-bottom: 15px;
+            text-align : left;
+        }
+        .modal-content p {
+            font-size: 20px;
+            color: black;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* ✅ 리스트 스타일 여백 조정 */
+        .modal-content ul,
+        .modal-content ol {
+            text-align: left; /* ✅ 리스트는 왼쪽 정렬 유지 */
+            padding-left: 25px; /* ✅ 리스트 들여쓰기 */
+            margin-bottom: 70px; /* ✅ 리스트 전체 여백 추가 */
+        }
+
+        /* ✅ 리스트 항목 간격 조정 */
+        .modal-content ul li,
+        .modal-content ol li {
+            font-size: 15px; /* ✅ 글씨 크기 조절 */
+            line-height: 1.3; /* ✅ 줄 간격 증가 */
+            margin-bottom: 10px; /* ✅ 리스트 항목 간격 추가 */
+        }
+
+        /* ✅ 애니메이션 효과 추가 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ✅ 닫기 버튼 스타일 */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+            background: none;
+            border: none;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        /* ✅ 모바일 화면 대응 (작은 화면에서 자동 조정) */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 90%; /* ✅ 모바일에서 더 넓게 표시 */
+                max-width: 90%; /* ✅ 최대 너비 제한 */
+                padding: 15px;
+            }
+        }
+
+        /* ✅ 스크롤 스타일 조정 (긴 내용 대응) */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #eee;
+        }
+
+        /* ✅ 표 스타일 개선 */
+        .modal-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .modal-content p{
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align : center;
+
+        }
+        .modal-content table, th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .modal-content th, td {
+            padding: 10px;
+        }
+
+        .modal-content th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        .detail-link {
+            display: block;  /* 블록 요소로 변경해서 가운데 정렬 */
+            text-align: center;  /* 텍스트 가운데 정렬 */
+            color: #3A4A7A;  /* 기본 색상 */
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;  /* 밑줄 제거 */
+            padding: 8px 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* 링크 호버 효과 (마우스를 올렸을 때) */
+        .detail-link:hover {
+            color: #4F5D9D;
+            text-decoration: underline;
+            transform: scale(1.05);  /* 약간 확대 효과 */
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #F8F9FA;
+            color: #777E90;
+            font-size: 14px;
+            margin-top : 100px;
+        }
+
+        .footer {
+            background-color: #505D96;  /* 푸터 배경색 */
+            color: #fff;               /* 글씨 색상 */
+            padding: 30px 0;           /* 안쪽 여백 */
+            text-align: center;        /* 중앙 정렬 */
+            position: relative;        /* 페이지 하단 고정 */
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+        }
+
+        .footer-content p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            list-style: none; /* 기본 리스트 스타일 제거 */
+            padding: 0;
+            margin: 0;
+            display: flex; /* 가로 정렬 */
+            justify-content: center;
+            gap: 30px; /* 항목 간격 */
+        }
+
+        .footer-links li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links li a:hover {
+            color: #F1C40F; /* 마우스 호버 시 노란색 */
+        }
+
+        .quick-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .quick-links h4 {
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .quick-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .quick-links li a {
+            color: #ddd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .quick-links li a:hover {
+            color: #F1C40F;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- 네비게이션 바 -->
+<div class="navbar">
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" alt="룸메랑 로고">
+    </div>
+    <div class="nav-links">
+        <a th:href="@{/board/rooms}">매칭해방</a>
+        <a th:href="@{/share/list}">나눔해방</a>
+    </div>
+
+    <div class="header-right">
+        <div class="icons">
+            <a th:href="@{/chat/list}"><img th:src="@{/images/chat.png}" alt="채팅"></a>
+            <a href="#"><img th:src="@{/images/alarm.png}" alt="알림"></a>
+            <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">
+                <img th:src="@{/images/my-page.png}" alt="내정보"></a>
+        </div>
+
+        <div class="user-menu">
+            <span th:text="${session.loginUser.name} + '님'" class="username"></span>
+            <img th:src="@{/images/plus.png}" alt="더보기" class="toggle-button">
+            <div class="dropdown-content">
+                <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">내 정보</a>
+                <a th:href="@{/favorite/list(userId=${session.loginUser.id})}">관심 목록</a>
+                <a href="#">리뷰 보기</a>
+                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
+                <form id="logoutForm" th:action="@{/auth/logout}" method="post" style="display: none;"></form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 배너 -->
+<div class="banner">
+    <button class="banner-arrow left-arrow" onclick="prevSlide()"><img th:src="@{/images/left-arrow.png}"></button>
+    <img id="bannerImage" th:src="@{/images/banner-1.jpg}" alt="배너 이미지">
+    <button class="banner-arrow right-arrow" onclick="nextSlide()"><img th:src="@{/images/right-arrow.png}"></button>
+</div>
+
+<script>
+    /* 드롭다운 메뉴 */
+    document.addEventListener("DOMContentLoaded", function () {
+        const userMenu = document.querySelector(".toggle-button");
+        const dropdown = document.querySelector(".dropdown-content");
+
+        userMenu.addEventListener("click", function (event) {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!userMenu.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    });
+
+    /* 배너 슬라이드 */
+    var bannerImages = [
+        "/images/banner-1.jpg",
+        "/images/banner-2.jpg",
+        "/images/banner-3.jpg",
+        "/images/banner-4.jpg"
+    ];
+    var currentIndex = 0;
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + bannerImages.length) % bannerImages.length;
+        updateBanner();
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % bannerImages.length;
+        updateBanner();
+    }
+
+    function updateBanner() {
+        document.getElementById("bannerImage").src = bannerImages[currentIndex];
+    }
+
+    setInterval(nextSlide, 10000);
+</script>
+
+<!-- ✅ 청년 주택 꿀팁 섹션 -->
+<div class="housing-tips">
+    <h2>🏡 청년 주택 꿀팁</h2>
+    <div class="tips-grid">
+        <!-- 카드 1: 청년 주택 정책 -->
+        <div class="tip-card">
+            <h3>💡 청년 주택 정책 한눈에 보기!</h3>
+            <p>청년 전월세 지원부터 LH 청년주택까지, 정책 총정리!</p>
+            <a href="#" class="detail-link" data-modal="policyModal">🔎 더 알아보기</a>
+        </div>
+
+        <div class="tip-card">
+            <h3>🚨 보증금 사기 예방법!</h3>
+            <p>보증금 사기를 피할 수 있는 핵심 체크리스트 공개!</p>
+            <a href="#" class="detail-link" data-modal="scamModal">🔎 더 알아보기</a>
+        </div>
+
+        <div class="tip-card">
+            <h3>🛋️ 자취 꿀템 BEST 5</h3>
+            <p>첫 자취라면? 이건 꼭 사야 해! 자취 필수템 공개!</p>
+            <a href="#" class="detail-link" data-modal="itemModal">🔎 더 알아보기</a>
+        </div>
+
+        <div class="tip-card">
+            <h3>💸 전세보증금 반환 보증</h3>
+            <p>안전하게 보증금을 돌려받을 수 있는 방법을 확인해보세요!</p>
+            <a href="#" class="detail-link" data-modal="depositModal">🔎 더 알아보기</a>
+        </div>
+    </div>
+
+    <!-- ✅ 청년 주택 정책 모달 -->
+    <div id="policyModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('policyModal')">&times;</button>
+            <h2>💡 청년 주택 정책</h2>
+            <p>정부에서 지원하는 다양한 청년 주택 정책을 소개합니다.</p>
+
+            <h3>🏠 주요 청년 주택 지원 정책</h3>
+            <ul>
+                <li>📌 <strong>전월세 보증금 대출:</strong> 최대 7천만 원 저금리 대출 지원</li>
+                <li>🏢 <strong>행복주택:</strong> 교통이 편리한 지역에 시세 대비 저렴한 공공 임대주택</li>
+                <li>🚉 <strong>역세권 청년주택:</strong> 역세권 내 청년을 위한 저렴한 임대주택</li>
+                <li>💰 <strong>청년 월세 지원:</strong> 저소득 청년에게 월 20만원 지원</li>
+                <li>🏦 <strong>주택 구입자금 대출:</strong> 청년을 위한 주택 구매 지원 대출</li>
+            </ul>
+
+            <h3>📝 청년 주택 정책 신청 방법</h3>
+            <ol>
+                <li>📑 <strong>자격 확인:</strong> 연령(만 19~39세), 소득 기준 충족 여부 확인</li>
+                <li>🖥️ <strong>온라인 신청:</strong> 마이홈 포털(<a href="https://www.myhome.go.kr/" target="_blank">바로가기</a>)에서 신청</li>
+                <li>📄 <strong>필요 서류 제출:</strong> 소득 증빙 자료, 가족관계증명서, 계약서 사본 등</li>
+                <li>⌛ <strong>심사 및 승인:</strong> 지원 대상자로 선정되면 안내받고 입주 진행</li>
+            </ol>
+
+            <h3>📌 자격 요건</h3>
+            <ul>
+                <li>✔️ 만 19~39세 청년</li>
+                <li>✔️ 무주택자</li>
+                <li>✔️ 일정 소득 기준 충족 (중위소득 150% 이하)</li>
+                <li>✔️ 근로, 창업, 학업 등 특정 조건 충족 필요</li>
+            </ul>
+
+            <h3>🔹 이런 사람들에게 추천!</h3>
+            <ul>
+                <li>🏢 **직장인 청년:** 직장과 가까운 곳에서 저렴하게 거주하고 싶은 경우</li>
+                <li>📚 **대학생 및 취업준비생:** 월세 부담을 줄이고 싶은 경우</li>
+                <li>💰 **자취를 처음 시작하는 청년:** 경제적 부담을 줄이고 안전한 주거 공간이 필요한 경우</li>
+            </ul>
+
+            <h3>🔗 유용한 사이트</h3>
+            <ul>
+                <li><a href="https://www.myhome.go.kr/" target="_blank" style="color: blue;">🏡 마이홈 포털</a> (청년 주택 지원 정보 확인 및 신청)</li>
+                <li><a href="https://www.hug.or.kr/" target="_blank" style="color: blue;">🏛 HUG 주택도시보증공사</a> (보증금 반환 보증 등)</li>
+                <li><a href="https://www.lh.or.kr/" target="_blank" style="color: blue;">🏢 LH 한국토지주택공사</a> (청년 전용 임대주택 정보)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ✅ 보증금 사기 예방법 모달 -->
+    <div id="scamModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('scamModal')">&times;</button>
+            <h2>🚨 보증금 사기 예방법</h2>
+            <p>보증금 사기를 피하려면 다음 사항을 꼭 확인하세요!</p>
+
+            <h3>🔍 대표적인 전세/월세 사기 유형</h3>
+            <ul>
+                <li>🏢 <strong>가짜 계약서 사기:</strong> 계약서를 위조해 보증금을 편취</li>
+                <li>📝 <strong>이중 계약 사기:</strong> 같은 집을 여러 명과 계약</li>
+                <li>🚨 <strong>전세 사기:</strong> 등기부등본 상 임대인이 아닌 사람이 계약을 유도</li>
+                <li>💰 <strong>보증금 미반환:</strong> 임대인이 보증금을 돌려주지 않음</li>
+                <li>⚠️ <strong>깡통 전세:</strong> 집값보다 보증금이 더 높은 상태로 전세 계약</li>
+            </ul>
+
+            <h3>✅ 전세/월세 사기 예방법</h3>
+            <ol>
+                <li>🔎 <strong>등기부등본 확인:</strong> 계약 전 반드시 등기부등본을 열람하여 **소유주와 실제 계약자가 동일한지** 확인</li>
+                <li>📜 <strong>계약서 특약사항 추가:</strong> 계약서에 **"전세 보증금 반환 보장"** 문구를 포함</li>
+                <li>🏛 <strong>전세보증금 반환 보증 가입:</strong> HUG(주택도시보증공사) 또는 SGI서울보증에서 보증 가입</li>
+                <li>💡 <strong>전세가율 체크:</strong> 전세가율이 **85% 이상이면 위험** (전세가율 = 전세가 / 매매가)</li>
+                <li>🔔 <strong>중개업체 등록 확인:</strong> 정식 등록된 공인중개사인지 **국토교통부 중개업소 등록조회**로 확인</li>
+            </ol>
+
+            <h3>📝 필수 체크리스트</h3>
+            <ul>
+                <li>📄 계약 전 **등기부등본** 열람 (대출, 가압류 여부 확인)</li>
+                <li>🏠 건물의 **실제 소유주**와 계약 진행</li>
+                <li>📑 계약 시 공인중개사 **확인증 요청**</li>
+                <li>💰 보증금 반환 보장 **특약사항 포함**</li>
+                <li>🚀 보증금 **대출 가능 여부** 확인</li>
+            </ul>
+
+            <h3>⚖️ 보증금을 돌려받는 법적 보호 방법</h3>
+            <ol>
+                <li>🏛 <strong>전세보증금 반환 소송:</strong> 임대인이 보증금을 반환하지 않을 경우 소송 진행</li>
+                <li>💰 <strong>임차권 등기명령 신청:</strong> 퇴거 후에도 보증금을 못 받으면 등기 신청 가능</li>
+                <li>🔹 <strong>전세금반환보증보험 가입:</strong> 보증금을 안전하게 돌려받을 수 있음</li>
+                <li>📜 <strong>법률 상담:</strong> 국토부, LH 상담센터 또는 변호사 상담 진행</li>
+            </ol>
+
+            <h3>🔗 유용한 사이트</h3>
+            <ul>
+                <li><a href="https://www.hug.or.kr/" target="_blank">🏛 HUG 주택도시보증공사</a> (보증금 반환 보증 상품)</li>
+                <li><a href="https://www.sgi.co.kr/" target="_blank">💼 SGI서울보증</a> (전세 보증보험)</li>
+                <li><a href="https://www.molit.go.kr/" target="_blank">🏠 국토교통부</a> (전세 사기 방지 정보)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ✅ 자취 꿀템 모달 -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('itemModal')">&times;</button>
+            <h2>🛋️ 자취 꿀템 BEST 10</h2>
+            <p>자취할 때 꼭 필요한 **필수템 & 유용한 아이템**을 소개합니다!</p>
+
+            <h3>🍳 **주방 필수템**</h3>
+            <ul>
+                <li>🔥 <strong>멀티 전기밥솥:</strong> 밥은 물론 찜, 죽, 볶음까지 가능!</li>
+                <li>🍲 <strong>1인용 인덕션:</strong> 가스렌지 없이도 요리가 가능!</li>
+                <li>🛢️ <strong>에어프라이어:</strong> 기름 없이 튀김 가능, 요리 초보도 쉽게 사용!</li>
+                <li>🥄 <strong>실리콘 조리도구 세트:</strong> 설거지가 쉬운 주방 필수템!</li>
+                <li>☕ <strong>미니 전기포트:</strong> 컵라면, 커피, 차 끓이기 필수!</li>
+            </ul>
+
+            <h3>🧹 **청소 & 위생템**</h3>
+            <ul>
+                <li>🌀 <strong>무선 청소기:</strong> 선 없이 빠르게 청소 가능!</li>
+                <li>🧼 <strong>욕실 청소 브러쉬:</strong> 곰팡이와 물때 제거 필수!</li>
+                <li>🛁 <strong>배수구 거름망:</strong> 머리카락과 음식물 찌꺼기 방지!</li>
+                <li>🧺 <strong>접이식 빨래 건조대:</strong> 공간 절약 필수템!</li>
+                <li>🧽 <strong>일회용 청소포:</strong> 걸레 없이 편하게 닦기!</li>
+            </ul>
+
+            <h3>📺 **자취 필수 가전템**</h3>
+            <ul>
+                <li>🛏️ <strong>접이식 침대:</strong> 작은 공간에서도 활용 가능!</li>
+                <li>💡 <strong>스마트 LED 스탠드:</strong> 밝기 조절 가능, 전기 절약!</li>
+                <li>🎛 <strong>미니 냉장고:</strong> 1인 가구 필수!</li>
+                <li>🎧 <strong>화이트 노이즈 머신:</strong> 조용한 환경에서 공부나 수면 가능!</li>
+            </ul>
+
+            <h3>💰 **자취생 절약템**</h3>
+            <ul>
+                <li>🔌 <strong>절전형 멀티탭:</strong> 대기전력 차단으로 전기료 절약!</li>
+                <li>🌱 <strong>냉장고 정리용기:</strong> 식재료 보관과 정리 필수!</li>
+                <li>💦 <strong>샤워필터:</strong> 수돗물 염소 제거로 피부 보호!</li>
+                <li>🌡️ <strong>전기요 & 온열매트:</strong> 겨울철 난방비 절약 필수!</li>
+            </ul>
+
+            <h3>📌 **자취 꿀팁 & 정리법**</h3>
+            <ol>
+                <li>✅ **주방 공간 활용**: 자석 칼걸이 & 접이식 식탁 활용!</li>
+                <li>✅ **옷 정리 꿀팁**: 계절별 옷은 압축팩 활용, 이불은 세로로 보관!</li>
+                <li>✅ **냉장고 정리법**: 위쪽엔 바로 먹을 것, 아래엔 신선식품!</li>
+                <li>✅ **청소 루틴 만들기**: 매일 10분씩 쓸고 닦으면 힘들지 않음!</li>
+            </ol>
+
+            <h3>🔗 **추천 사이트 & 쇼핑몰**</h3>
+            <ul>
+                <li><a href="https://www.coupang.com/" target="_blank">🛒 쿠팡 - 자취템 할인</a></li>
+                <li><a href="https://www.daiso.co.kr/" target="_blank">🏠 다이소 - 가성비 생활용품</a></li>
+                <li><a href="https://www.gmarket.co.kr/" target="_blank">🛍️ G마켓 - 자취 가전 할인</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ✅ 전세보증금 반환 보증 모달 -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('depositModal')">&times;</button>
+            <h2>💸 전세보증금 반환 보증</h2>
+            <p>전세보증금을 안전하게 돌려받을 수 있는 방법을 확인하세요!</p>
+
+            <h3>📌 **전세보증금 반환 보증이란?**</h3>
+            <ul>
+                전세 계약 종료 후 임대인이 보증금을 반환하지 못하는 경우,
+                보증기관(공공기관)이 대신 반환해주는 보증 제도입니다.
+                임차인은 안심하고 보증금을 지킬 수 있으며,
+                임대인이 보증금을 반환할 수 없는 전세 사기 및 부도 위험을 예방할 수 있습니다.
+            </ul>
+
+            <h3>⚠️ **전세보증금 반환 보증이 필요한 이유**</h3>
+            <ul>
+                <li>🏠 <strong>전세 사기 예방:</strong> 임대인이 돌려주지 않는 보증금 보호</li>
+                <li>💰 <strong>보증금 반환 지연 방지:</strong> 법적 절차 없이 보증기관에서 지급</li>
+                <li>📉 <strong>집값 하락 대비:</strong> 집값이 떨어져도 보증금 반환 가능</li>
+                <li>🚨 <strong>전세 계약 안정성 확보:</strong> 안심하고 계약 유지 가능</li>
+            </ul>
+
+            <h3>🏦 **보증기관 & 추천 보증상품**</h3>
+            <ul>
+                <li>✅ <strong>HUG (주택도시보증공사):</strong> 국가에서 운영하는 대표적인 보증 상품 제공</li>
+                <li>✅ <strong>SGI 서울보증보험:</strong> 민간 기관에서 운영하는 보증 상품</li>
+                <li>✅ <strong>HF 한국주택금융공사:</strong> 보증보험과 연계된 대출 상품</li>
+            </ul>
+
+            <h3>📌 **보증 가입 대상**</h3>
+            <p>아래 조건을 충족하면 보증 가입이 가능합니다.</p>
+            <ul>
+                <li>👤 **전세 임차인 (세입자)**</li>
+                <li>🏠 **전세 계약이 1년 이상 남아 있어야 함**</li>
+                <li>💰 **임대인의 동의 없이 가입 가능**</li>
+                <li>📄 **전세보증금 한도: 수도권 7억 원, 지방 5억 원 이하**</li>
+            </ul>
+
+            <h3>📝 **보증 가입 방법**</h3>
+            <p>아래 절차에 따라 보증 가입이 가능합니다.</p>
+            <ol>
+                <li>🔍 **보증기관 홈페이지 접속 (HUG, SGI, HF 등)**</li>
+                <li>📄 **전세 계약서, 확정일자 서류 준비**</li>
+                <li>💳 **보증료 납부 (연 0.1~0.2%)**</li>
+                <li>✅ **보증 가입 완료 후 보증서 발급**</li>
+            </ol>
+
+            <h3>💰 **보증금 반환 절차**</h3>
+            <p>보증금을 돌려받지 못할 경우 보증기관이 대신 지급합니다.</p>
+            <ol>
+                <li>🚨 **임대인이 보증금 반환 거부**</li>
+                <li>📄 **보증기관에 신청 (HUG, SGI 등)**</li>
+                <li>💰 **보증기관에서 보증금 선 지급**</li>
+                <li>⚖️ **보증기관이 임대인에게 반환 청구**</li>
+            </ol>
+
+            <h3>🔗 **보증 가입 & 신청 링크**</h3>
+            <ul>
+                <li><a href="https://www.hug.or.kr/" target="_blank">🏛️ HUG 주택도시보증공사</a></li>
+                <li><a href="https://www.sgi.co.kr/" target="_blank">💼 SGI 서울보증</a></li>
+                <li><a href="https://www.hf.go.kr/" target="_blank">🏦 한국주택금융공사</a></li>
+            </ul>
+
+            <h3>💡 **추가 팁: 보증금 보호를 위한 팁!**</h3>
+            <ul>
+                <li>✅ **계약 전 등기부등본 확인 필수 (전세권 설정 여부 체크)**</li>
+                <li>✅ **보증 가입 전 확정일자 신고 필수 (동사무소에서 가능)**</li>
+                <li>✅ **계약서 특약란에 "전세보증금 반환 보증 가입 필수" 명시**</li>
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // ✅ 자동으로 모달이 뜨는 것을 방지하기 위해 모든 모달을 숨김
+            const allModals = document.querySelectorAll(".modal");
+            allModals.forEach(modal => {
+                modal.style.display = "none"; // ✅ 페이지 로드 시 모든 모달 숨김
+            });
+
+            // ✅ 청년 주택 꿀팁 섹션의 "더 알아보기" 버튼만 모달 열리도록 설정
+            const detailLinks = document.querySelectorAll(".housing-tips .detail-link");
+
+            detailLinks.forEach(link => {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault(); // ✅ 기본 링크 이동 방지
+                    const modalId = this.getAttribute("data-modal"); // ✅ 클릭한 링크의 data-modal 속성 가져오기
+                    openModal(modalId); // ✅ 해당 모달 열기
+                });
+            });
+        });
+
+        // ✅ 모달 열기 함수
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = "block";
+                document.body.style.overflow = "hidden";  // ✅ 배경 스크롤 방지
+            }
+        }
+
+        // ✅ 모달 닫기 함수
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto";  // ✅ 배경 스크롤 다시 활성화
+            }
+        }
+
+        // ✅ 모달 외부 클릭 시 닫기 기능 추가
+        window.onclick = function (event) {
+            if (event.target.classList.contains("modal")) {
+                event.target.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        };
+    </script>
+
+</div>
+
+
+<footer class="footer">
+    <p>MADE BY. 백석대학교 산대특 프로그램 일동</p>
+    <div class="footer-content">
+        <!-- 회사 정보 -->
+        <p>© 2025 룸메랑. All rights reserved.</p>
+
+        <!-- 푸터 링크 -->
+        <ul class="footer-links">
+            <li><a th:href="@{/auth/terms}">이용약관</a></li>
+            <li><a th:href="@{/auth/privacy}">개인정보 처리방침</a></li>
+            <li><a th:href="@{/auth/contact}">고객센터</a></li>
+        </ul>
+    </div>
+
+    <div class="quick-links">
+        <h4>🔍 빠른 이동</h4>
+        <ul>
+            <li><a href="/board/rooms">매칭해방</a></li>
+            <li><a href="/share/list">나눔해방</a></li>
+            <li><a th:href="@{/auth/faq}">FAQ</a></li>
+            <li><a th:href="@{/auth/contact}">고객센터</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

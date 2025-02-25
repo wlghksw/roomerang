@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>아이디 찾기 완료</title>
+  <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: #F8F9FC;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #505D96;
+    }
+
+    p {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 20px;
+      color: #424C7D;
+      margin-bottom: 30px;
+    }
+
+    a {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #505D96;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+      margin-top: 20px;
+    }
+
+    a:hover {
+      background-color: #424C7D;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <img th:src="@{/images/logo.png}" alt="룸메랑 로고" height="80">
+  <h1>아이디 찾기 완료</h1>
+
+  <p>회원님의 아이디는 다음과 같습니다.</p>
+
+  <h2><strong th:text="${username}">실제 아이디</strong></h2>
+
+  <a href="/auth/login">로그인 페이지로 이동</a>
+</div>
+</body>
+</html>

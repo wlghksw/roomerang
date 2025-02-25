@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>방 있음 목록</title>
+
+    <!-- ✅ 스타일-->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F9FA;
+        }
+
+        /* ✅ 방 없음 목록 스타일 */
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: #505D96;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ✅ 페이징 스타일 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #505D96;
+            font-weight: bold;
+        }
+
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+
+        /* ✅ 검색창, 버튼들이 한 줄에 정렬되도록 설정 */
+        .search-container {
+            display: flex;             /* 가로 정렬 */
+            justify-content: center;   /* 가운데 정렬 */
+            /*align-items: center;*/       /* 세로 중앙 정렬 */
+            gap: 10px;                 /* 요소 간 간격 */
+        }
+
+        /* ✅ 검색창 스타일 */
+        .search-box {
+            width: 400px;              /* 검색창 너비 */
+            height: 45px;              /* 검색창 높이 (버튼과 동일하게 맞춤) */
+            padding: 10px 15px;        /* 내부 여백 */
+            font-size: 16px;           /* 글자 크기 */
+            border: 2px solid #505D96; /* 테두리 색상 */
+            border-radius: 8px;        /* 둥근 모서리 */
+            outline: none;             /* 클릭 시 기본 아웃라인 제거 */
+            box-sizing: border-box;    /* 패딩 포함한 크기 유지 */
+        }
+
+        /* ✅ 버튼 공통 스타일 (검색 버튼 & 글 등록 버튼) */
+        .btn-custom,
+        .write-button {
+            width: 100px;              /* 버튼 너비 (일관성 유지) */
+            height: 45px;              /* 버튼 높이 (검색창과 동일하게 맞춤) */
+            padding: 10px;             /* 내부 여백 */
+            font-size: 16px;           /* 글자 크기 */
+            font-weight: bold;         /* 글자 굵기 */
+            color: white;              /* 글자 색상 */
+            background-color: #505D96; /* 버튼 색상 */
+            border: none;              /* 기본 테두리 제거 */
+            border-radius: 8px;        /* 둥근 모서리 */
+            cursor: pointer;           /* 마우스 올릴 때 클릭 가능한 포인터 표시 */
+            display: flex;             /* 내부 정렬을 위해 flex 적용 */
+            justify-content: center;   /* 텍스트 가운데 정렬 */
+            align-items: center;       /* 세로 중앙 정렬 */
+            box-sizing: border-box;    /* 패딩 포함한 크기 유지 */
+            text-decoration: none;     /* 밑줄 제거 */
+        }
+
+        /* ✅ 버튼 호버 효과 */
+        .btn-custom:hover,
+        .write-button:hover {
+            background-color: #3A4A7A; /* 마우스 올릴 때 색상 변경 */
+        }
+
+        /* ✅ 카테고리 드롭다운 스타일 */
+        .category-select {
+            width: 100px;
+            height: 45px;              /* 높이 (검색창과 동일하게 맞춤) */
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #505D96;
+            background-color: white;
+            /* margin: 20px auto;*/
+            border: 2px solid #505D96;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;   /* 텍스트 가운데 정렬 */
+            align-items: center;       /* 세로 중앙 정렬 */
+            box-sizing: border-box;    /* 패딩 포함한 크기 유지 */
+            transition: border-color 0.3s;
+        }
+
+        .category-select:hover {
+            border-color: #3A4A7A;
+        }
+
+        /* ✅ 카드 그리드 스타일 */
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .post-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .post-info {
+            padding: 15px;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .post-price {
+            font-size: 16px;
+            color: #505D96;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .post-location {
+            font-size: 14px;
+            color: #b0b0b0;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 🌟 메인 콘텐츠 -->
+<div layout:fragment="content">
+
+    <!-- ✅ 방 있음 목록 -->
+    <h1>방 있음 목록</h1>
+
+    <div class="search-container">
+
+        <!-- 카테고리 선택 -->
+        <form>
+            <select class="category-select" onchange="location = this.value;">
+                <option value="/board/rooms" selected>방 있음</option>
+                <option value="/board/no-rooms">방 없음</option>
+            </select>
+        </form>
+
+        <form th:action="@{/board/search}" method="get" class="search-container">
+            <input type="hidden" name="category" value="방 있음">
+            <input class="search-box" type="text" name="keyword" placeholder="제목 또는 작성자 검색" th:value="${keyword}">
+            <button type="submit" class="btn-custom">검색</button>
+        </form>
+
+        <!-- 글 등록 버튼 -->
+        <a th:href="@{/board/post/create(category='방 있음')}" class="write-button">글 등록</a>
+
+    </div>
+
+    <!-- ✅ 카드 리스트 -->
+    <div class="post-grid">
+        <div th:each="post : ${postsPage.content}" class="post-card" th:onclick="|location.href='@{/board/post/{id}(id=${post.rmPostId})}'|">
+            <img th:src="${post.photoUrls != null and not #lists.isEmpty(post.photoUrls) ? post.photoUrls[0] : '/images/default.jpg'}" alt="게시글 이미지">
+            <div class="post-info">
+                <div class="post-title" th:text="${post.rmBoardTitle}"></div>
+                <div class="post-price" th:text="${post.amount} + ' 만원'"></div>
+                <div class="post-location" th:text="${post.authorRegion}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 페이징 -->
+    <div class="pagination">
+        <a th:if="${postsPage.hasPrevious()}" th:href="@{/board/rooms(page=${postsPage.number - 1}, size=${postsPage.size})}">이전</a>
+        <span th:text="${postsPage.number + 1}"></span> / <span th:text="${postsPage.totalPages}"></span>
+        <a th:if="${postsPage.hasNext()}" th:href="@{/board/rooms(page=${postsPage.number + 1}, size=${postsPage.size})}">다음</a>
+    </div>
+
+</div>
+
+</body>
+</html>

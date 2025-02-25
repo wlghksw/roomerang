@@ -1,0 +1,117 @@
+
+.navbar {
+    width: 100vw; /* ✅ 가로 너비를 화면 전체로 설정 */
+    height: 80px;  /* ✅ 네비게이션 바 높이 */
+    background-color: white;
+    position: fixed; /* ✅ 화면 최상단에 고정 */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* ✅ 다른 요소들 위에 표시 */
+    padding: 0 50px; /* ✅ 좌우 여백 추가 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* ✅ 네비바가 페이지를 가리지 않도록 조정 */
+body {
+    padding-top: 80px; /* ✅ 네비게이션 바의 높이만큼 페이지 전체를 아래로 내림 */
+}
+
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 10px 20px; /* ✅ 작은 화면에서는 패딩을 줄임 */
+    }
+}
+
+.logo img {
+    height: 60px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 50px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #505D96;
+    font-weight: bold;
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #3A4A7A;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icons {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.icons img {
+    width: 30px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.icons img:hover {
+    transform: scale(1.1);
+}
+
+.user-menu {
+    font-weight: bold;
+    color: #505D96;
+}
+.user-menu .toggle-button {
+    width: 20px;
+    cursor: pointer;
+}
+
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 70px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    min-width: 150px;
+    z-index: 10;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #777E90;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* ✅ 드롭다운 토글 */
+.user-menu:hover .dropdown-content {
+    display: block;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

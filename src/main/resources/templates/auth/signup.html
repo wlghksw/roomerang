@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            overflow-y: auto;  /* 세로 스크롤 추가 */
+        }
+
+        .container {
+            overflow-y: auto;  /* 폼 안에서 스크롤 가능하게 */
+        }
+        /* 전체 페이지 스크롤바 숨기기 */
+        body::-webkit-scrollbar {
+            display: none;  /* 스크롤바 숨기기 */
+        }
+
+        .container::-webkit-scrollbar {
+            display: none;  /* 폼 안의 스크롤바 숨기기 */
+        }
+
+        /* 다른 브라우저 호환성 (Firefox 등) */
+        body {
+            scrollbar-width: none;  /* Firefox에서 스크롤바 숨기기 */
+            -ms-overflow-style: none;  /* IE, Edge에서 스크롤바 숨기기 */
+        }
+
+        .container {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+
+        body {
+            background-color: #F8F9FC;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;  /* 최소 높이로 설정 */
+            padding: 20px;  /* 여유 공간 추가 */
+            overflow-y: auto;  /* 넘치는 내용은 스크롤 처리 */
+        }
+
+        form img {
+            display: block;
+            margin-bottom: 0;  /* 로고 아래 여백 제거 */
+            padding: 0;
+        }
+        @media (max-height: 800px) {
+            .container {
+                padding: 20px;  /* 화면이 작으면 패딩 줄이기 */
+                width: 350px;   /* 폼 너비도 줄이기 */
+                max-height: 85vh;  /* 최대 높이 줄이기 */
+            }
+
+            h1 {
+                font-size: 20px;  /* 제목 크기 줄이기 */
+                margin-bottom: 15px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;  /* 입력 필드 사이 여백 줄이기 */
+            }
+
+            button {
+                padding: 10px;  /* 버튼 크기 줄이기 */
+                font-size: 14px;
+            }
+        }
+
+
+        form h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            text-align: center;
+            margin-top: 0;        /* 로고와의 여백 제거 */
+            margin-bottom: 100px;  /* 아래쪽 여백 추가 */
+            padding: 0;
+        }
+
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-height: 90vh;  /* 전체 화면 높이의 90%로 제한 */
+            overflow-y: auto;  /* 넘치는 내용은 스크롤로 처리 */
+            text-align: center;
+        }
+
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background-color: #EDF2F7;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .form-group .inline-button {
+            padding: 10px;
+            font-size: 12px;
+            background-color: #505D96;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background-color: #EDF2F7;
+            font-size: 14px;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .form-group .inline-button:hover {
+            background-color: #424C7D;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .row input {
+            width: 32%;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .radio-group button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #EDF2F7;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .radio-group button.active {
+            background-color: #505D96;
+            color: white;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            box-shadow: none !important;
+            border: none;
+        }
+
+        button {
+            box-shadow: none !important;
+            border: none;
+        }
+
+        .form-buttons button {
+            margin-top: 20px;
+            width: 48%;
+        }
+
+        .check {
+            background-color: #505D96;
+            color: white;
+            border-radius: 5px;
+            width: 15%;
+            padding: 5px 0;
+            font-size: 11px;
+            box-shadow: none !important;
+        }
+
+        .btn-lg {
+            background-color: #505D96;
+            color: white;
+            border-radius: 5px;
+            width: 100%;
+            font-weight: bold;
+            padding: 12px 0;
+            font-size: 16px;
+            box-shadow: none !important;
+        }
+
+        .cancle {
+            background-color: #6c757d;
+            color: white;
+            border-radius: 5px;
+            width: 100%;
+            font-weight: bold;
+            padding: 12px 0;
+            font-size: 16px;
+            box-shadow: none !important;
+        }
+
+        .cancle:hover {
+            background-color: #5a6268;
+        }
+
+        .error{
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <a th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="룸메랑 로고" height="80">
+    </a>
+    <h1>회원가입</h1>
+
+    <form th:action="@{/auth/signup}" th:object="${signupForm}" method="post">
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text"
+                   id="name"
+                   th:field="*{name}"
+                   placeholder="이름 입력"
+                   th:classappend="${#fields.hasErrors('name')} ? 'error-border' : ''" />
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="birthDate">생년월일</label>
+            <input type="date"
+                   id="birthDate"
+                   th:field="*{birthDate}"
+                   th:classappend="${#fields.hasErrors('birthDate')} ? 'error-border' : ''" />
+            <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="gender">성별</label>
+            <select id="gender"
+                    th:field="*{gender}"
+                    th:classappend="${#fields.hasErrors('gender')} ? 'error-border' : ''">
+                <option value="" selected>선택</option>
+                <option th:value="MALE">남성</option>
+                <option th:value="FEMALE">여성</option>
+            </select>
+            <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="username">아이디</label>
+            <div style="display: flex; align-items: center;">
+                <input type="text"
+                       id="username"
+                       th:field="*{username}"
+                       placeholder="아이디 입력"
+                       th:classappend="${#fields.hasErrors('username')} ? 'error-border' : ''"
+                       oninput="resetUsernameCheck()"/>
+                <!-- ↑ oninput: 아이디를 수정하면 중복확인 상태를 false로 되돌리기 -->
+
+                <button type="button" class="check" onclick="checkUsername()" style="margin-left: 8px;">
+                    중복<br>확인
+                </button>
+            </div>
+
+            <!-- 에러 표시 -->
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error"></div>
+        </div>
+
+        <!-- 아이디 중복 확인 완료 여부를 저장할 hidden 필드 -->
+        <input type="hidden" id="usernameChecked" value="false" />
+
+        <script>
+            async function checkUsername() {
+                const usernameInput = document.getElementById("username");
+                const usernameValue = usernameInput.value.trim();
+                const usernameChecked = document.getElementById("usernameChecked");
+
+                if (!usernameValue) {
+                    alert("아이디를 입력해주세요.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/auth/check-username?username=${encodeURIComponent(usernameValue)}`);
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        alert(error.error);
+                        usernameChecked.value = "false";
+                        return;
+                    }
+
+                    const result = await response.json();
+                    alert(result.message);
+                    usernameChecked.value = "true";
+
+                } catch (err) {
+                    alert("이미 사용중인 아이디 입니다.");
+                    usernameChecked.value = "false";
+                }
+            }
+
+            function resetUsernameCheck() {
+                document.getElementById("usernameChecked").value = "false";
+            }
+        </script>
+
+        <!--
+      기존의 5가지 질문 문자열들을 상수로 지정한 뒤,
+      "만약 securityQuestion이 이 중 하나면, 그걸 SELECT로 선택,
+       아니면 CUSTOM으로 간주" 로직을 쓸 수 있음
+    -->
+        <th:block th:with="q1='가장 좋아했던 동화책의 제목은 무엇입니까?',
+                   q2='부모님이 처음 만난 도시는 어디입니까?',
+                   q3='처음으로 가보았던 해변의 이름은 무엇입니까?',
+                   q4='반려동물의 이름은 무엇입니까?',
+                   q5='졸업한 초등학교의 이름은 무엇입니까?'">
+
+            <div class="form-group">
+                <label for="securityQuestionSelect">보안 질문</label>
+
+                <!-- (1) SELECT 박스 -->
+                <select id="securityQuestionSelect"
+                        onchange="handleSecurityQuestionChange()"
+                        th:classappend="${#fields.hasErrors('securityQuestion')} ? 'error-border' : ''">
+                    <option value="">-- 보안 질문 선택 --</option>
+                    <option th:value="${q1}"
+                            th:selected="${signupForm.securityQuestion == q1}"
+                            th:text="${q1}"></option>
+                    <option th:value="${q2}"
+                            th:selected="${signupForm.securityQuestion == q2}"
+                            th:text="${q2}"></option>
+                    <option th:value="${q3}"
+                            th:selected="${signupForm.securityQuestion == q3}"
+                            th:text="${q3}"></option>
+                    <option th:value="${q4}"
+                            th:selected="${signupForm.securityQuestion == q4}"
+                            th:text="${q4}"></option>
+                    <option th:value="${q5}"
+                            th:selected="${signupForm.securityQuestion == q5}"
+                            th:text="${q5}"></option>
+                    <option value="CUSTOM"
+                            th:selected="${#lists.contains({q1,q2,q3,q4,q5}, signupForm.securityQuestion) == false
+                                  and signupForm.securityQuestion != null
+                                  and signupForm.securityQuestion != ''}"
+                            th:text="'자유 입력'">
+                    </option>
+                </select>
+
+                <!-- (2) 자유 입력 text -->
+                <input type="text"
+                       id="securityQuestionCustom"
+                       placeholder="보안 질문 직접 입력"
+                       th:value="${#lists.contains({q1,q2,q3,q4,q5}, signupForm.securityQuestion) == false
+                          ? signupForm.securityQuestion : ''}"
+                       style="display: none;" />
+
+                <!-- (3) 실제 전송될 필드 -->
+                <input type="hidden"
+                       th:field="*{securityQuestion}"
+                       id="securityQuestionHidden" />
+
+                <!-- 에러 표시 -->
+                <div th:if="${#fields.hasErrors('securityQuestion')}"
+                     th:errors="*{securityQuestion}"
+                     class="error"></div>
+            </div>
+        </th:block>
+
+        <script>
+            function handleSecurityQuestionChange() {
+                const selectEl = document.getElementById("securityQuestionSelect");
+                const customEl = document.getElementById("securityQuestionCustom");
+                const hiddenEl = document.getElementById("securityQuestionHidden");
+
+                const selectedValue = selectEl.value;
+
+                if (selectedValue === "CUSTOM") {
+                    // 자유 입력창 표시
+                    customEl.style.display = "inline-block";
+                    // hiddenEl.value = "";
+                } else {
+                    // 자유 입력창 숨기고, 값 비우기
+                    customEl.style.display = "none";
+                    customEl.value = "";
+                    hiddenEl.value = selectedValue;
+                }
+            }
+
+            // 사용자 typing 시 hidden 갱신
+            document.getElementById("securityQuestionCustom").addEventListener('input', function(){
+                const hiddenEl = document.getElementById("securityQuestionHidden");
+                hiddenEl.value = this.value;
+            });
+
+            // (4) 페이지 로드 시, 이미 "CUSTOM" 상태인지 확인 → 화면에 반영
+            window.addEventListener('DOMContentLoaded', function() {
+                const selectEl = document.getElementById("securityQuestionSelect");
+                const customEl = document.getElementById("securityQuestionCustom");
+                const hiddenEl = document.getElementById("securityQuestionHidden");
+
+                if (selectEl.value === "CUSTOM") {
+                    // 자유 입력 상태였다면
+                    customEl.style.display = "inline-block";
+                    // hiddenEl.value는 이미 th:value 세팅됨
+                } else {
+                    customEl.style.display = "none";
+                }
+            });
+        </script>
+
+        <div class="form-group">
+            <label for="securityAnswer">보안 질문 답변</label>
+            <input type="text"
+                   id="securityAnswer"
+                   th:field="*{securityAnswer}"
+                   placeholder="보안 질문 답변 입력"
+                   th:classappend="${#fields.hasErrors('securityAnswer')} ? 'error-border' : ''" />
+            <div th:if="${#fields.hasErrors('securityAnswer')}" th:errors="*{securityAnswer}" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password"
+                   id="password"
+                   th:field="*{password}"
+                   placeholder="비밀번호 입력"
+                   th:classappend="${#fields.hasErrors('password')} ? 'error-border' : ''" />
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="passwordConfirm">비밀번호 확인</label>
+            <input type="password"
+                   id="passwordConfirm"
+                   th:field="*{passwordConfirm}"
+                   placeholder="비밀번호 확인 입력"
+                   th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'error-border' : ''" />
+            <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}" class="error"></div>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-lg">회원가입</button>
+            <button class="w-100 btn btn-secondary cancle"
+                    th:onclick="|location.href='@{/}'|"
+                    type="button">취소
+            </button>
+        </div>
+
+    </form>
+
+    <script>
+        function validateForm() {
+            const usernameChecked = document.getElementById("usernameChecked").value;
+            if (usernameChecked !== "true") {
+                alert("아이디 중복 확인을 해주세요.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</div>
+</body>
+</html>

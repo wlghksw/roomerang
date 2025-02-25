@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>글 상세 조회</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F5F7FA;
+            margin:20px;
+            padding: 20px;
+        }
+
+        /* ✅ 전체 컨테이너 */
+        .container {
+            background: transparent;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px; /* ✅ 컨테이너 크기 증가 */
+            min-width: 800px; /* ✅ 최소 너비 추가 */
+            margin: 100px auto; /* ✅ 자동 중앙 정렬 */
+            height: auto; /* ✅ 내부 콘텐츠에 맞게 크기 조절 */
+
+        }
+
+        /* ✅ 제목 + 찜 버튼 한 줄 정렬 */
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* ✅ 찜 버튼 */
+        .wishlist {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .wishlist:hover {
+            transform: scale(1.1);
+        }
+
+        /* ✅ 작성자 정보 */
+        .author-info {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* ✅ 선호도 태그 스타일 */
+        .preference-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .preference-item {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            background-color: #505D96;
+            color: white;
+        }
+
+        /* ✅ 게시글 내용 (높이 증가) */
+        .post-content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 18px;
+            font-weight: normal;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            text-align: left;
+            margin-bottom: 20px;
+            min-height: 400px; /* ✅ 높이를 더 늘림 */
+        }
+
+        /* ✅ 버튼 컨테이너 */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-primary {
+            background-color: #505D96;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3A4A7A;
+        }
+
+        .btn-danger {
+            background-color: #E74C3C;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #C0392B;
+        }
+
+        .btn-chat{
+            background-color: #505D96;
+            color: white;
+        }
+        .btn-chat:hover{
+            background-color: #3A4A7A;
+        }
+
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="container">
+        <!-- ✅ 제목 + 찜 버튼 -->
+        <div class="title-container">
+            <h1 th:text="${post.rmBoardTitle}"></h1>
+            <img id="favorite-img" th:if = "${isFavorite == true}" th:src="@{/images/fullH.png}" alt="찜" class="wishlist" onclick="toggleFavorite()">
+            <img id="favorite-img" th:unless = "${isFavorite == true}" th:src="@{/images/binH.png}" alt="찜" class="wishlist" onclick="toggleFavorite()">
+        </div>
+
+        <!-- ✅ 작성자 지역 -->
+        <p class="author-info">지역: <span th:text="${post.authorRegion}"></span></p>
+
+        <!-- ✅ 작성자 선호도 -->
+        <div class="preference-container">
+            <span th:if="${post.smoking != null and post.smoking}" class="preference-item">흡연</span>
+            <span th:if="${post.smoking != null and !post.smoking}" class="preference-item">비흡연</span>
+
+            <span th:if="${post.pets != null and post.pets}" class="preference-item">반려동물 있음</span>
+            <span th:if="${post.pets != null and !post.pets}" class="preference-item">반려동물 없음</span>
+
+            <span th:if="${post.lifestylePattern != null and post.lifestylePattern == '아침형 인간'}" class="preference-item">아침형 인간</span>
+            <span th:if="${post.lifestylePattern != null and post.lifestylePattern == '밤형 인간'}" class="preference-item">밤형 인간</span>
+        </div>
+
+        <!-- ✅ 게시글 내용 -->
+        <div class="post-content">
+            <p th:text="${post.postContent}"></p>
+        </div>
+
+        <!-- ✅ 버튼 컨테이너 -->
+        <div class="button-container">
+            <a th:href="@{${post.category == '방 있음'} ? '/board/rooms' : '/board/no-rooms'}" class="btn btn-secondary">목록</a>
+
+            <!-- ✅ 로그인한 사용자만 수정/삭제 가능 -->
+            <th:block th:if="${session.loginUser != null and session.loginUser.username == post.userId}">
+                <a th:href="@{/board/post/edit/{id}(id=${post.rmPostId})}" class="btn btn-primary">수정</a>
+                <form th:action="@{/board/post/delete/{id}(id=${post.rmPostId})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                </form>
+            </th:block>
+
+            <!--채팅-->
+            <th:block th:if="${loginUser != null and post.userId != loginUser.username}">
+                <form th:action="@{/chat/start/{postId}(postId=${post.rmPostId})}" method="post">
+                    <input type="hidden" name="type" value="matching">  <!— ✅ type 값 추가 —>
+                    <button type="submit" class="btn btn-chat">채팅하기</button>
+                </form>
+            </th:block>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function toggleFavorite() {
+            var userId = [[${loginUser.id}]]; // 실제 로그인된 사용자 ID로 대체
+            console.log(userId);
+            var postId = [[${post.rmPostId}]]; // 실제 게시글 ID로 대체
+            var postType = "NO_ROOM"; // 현재 페이지에 맞게 변경
+            var postTitle = [[${post.rmBoardTitle}]]; //실제 게시글 title로 대체
+
+            fetch('/favorite/toggle?userId=' + userId + '&postId=' + postId + '&postType=' + postType + '&postTitle=' + postTitle, {
+                method: 'POST'
+            })
+                .then(response => response.text())
+                .then(data => {
+                    var img = document.getElementById("favorite-img");
+                    if (img.src.includes("binH.png")) {
+                        data="등록되었습니다";
+                        img.src = "/images/fullH.png"; // 찜 등록 상태로 변경
+                    } else {
+                        data="둥록 취소되었습니다."
+                        img.src = "/images/binH.png"; // 찜 해제 상태로 변경
+                    }
+
+                    alert(data); // "등록되었습니다." 또는 "등록 취소되었습니다."
+                });
+        }
+    </script>
+</div>
+</body>
+</html>

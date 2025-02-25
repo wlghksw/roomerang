@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>아이디 찾기 - 계정 선택</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: #F8F9FC;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #505D96;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #505D96;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #424C7D;
+        }
+
+        .field-error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img th:src="@{/images/logo.png}" alt="룸메랑 로고" height="80">
+    <h1>아이디 찾기</h1>
+    <p>사용자 계정을 선택한 후, 다음 단계로 진행하세요.</p>
+
+    <!-- 계정 선택 폼 -->
+    <form th:action="@{/auth/find-id/security-question}" th:object="${userFindResponses}" method="get">
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+               th:text="${err}">전체 오류 메시지</p>
+        </div>
+        <div class="form-group">
+            <label>아이디 목록</label>
+            <div th:each="user : ${userFindResponses}">
+                <input type="radio" name="userId" th:value="${user.userId}" required />
+                <span th:text="${user.maskedUsername}">마스킹된 아이디</span>
+            </div>
+        </div>
+
+        <button type="submit">다음</button>
+    </form>
+</div>
+</body>
+</html>

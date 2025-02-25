@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원가입 성공</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+        body {
+            background-color: #F8F9FC;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .h1{
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .confetti {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+        }
+        .success-icon {
+            font-size: 50px;
+            color: #505D96;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #505D96;
+            border: none;
+            font-weight: bold;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #424C7D;
+        }
+    </style>
+</head>
+<body>
+
+<div class="confetti" id="confetti-container"></div>
+
+<div class="container">
+    <div class="success-icon">🎉</div>
+    <h1 class="fw-bold">회원가입 완료!</h1>
+    <p class="text-muted">룸메랑에 가입해주셔서 감사합니다! 🎊<br>지금 바로 서비스 이용을 시작하세요.</p>
+    <a href="/" class="btn btn-primary mt-3">홈으로 가기</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Confetti 효과 -->
+<script>
+    function createConfetti() {
+        const confettiContainer = document.getElementById("confetti-container");
+        for (let i = 0; i < 100; i++) {
+            const confetti = document.createElement("div");
+            confetti.classList.add("confetti-piece");
+            confetti.style.position = "absolute";
+            confetti.style.width = "10px";
+            confetti.style.height = "10px";
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear infinite`;
+            confettiContainer.appendChild(confetti);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", createConfetti);
+</script>
+
+<style>
+    @keyframes fall {
+        0% { transform: translateY(-10vh) rotate(0deg); }
+        100% { transform: translateY(100vh) rotate(720deg); }
+    }
+    .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        opacity: 0.7;
+    }
+</style>
+
+</body>
+</html>

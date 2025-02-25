@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>나의 정보</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    /* 전체 페이지 스타일 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F8F9FA;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* 컨테이너 박스 */
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    /* 제목 스타일 */
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #505D96;
+      margin-bottom: 20px;
+    }
+
+    /* 폼 그룹 스타일 */
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    /* 입력 필드 스타일 */
+    .form-control {
+      width: 378px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: #f8f9fa;
+      color: #333;
+      cursor: not-allowed;
+    }
+
+    /* 버튼 컨테이너 */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* 버튼 스타일 */
+    .btn {
+      width: 120px;
+      height: 40px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;  /* 📌 버튼 내부 요소 중앙 정렬 */
+      align-items: center;
+      justify-content: center;
+      text-decoration: none; /* 📌 밑줄 제거 */
+    }
+
+    .btn-primary {
+      background-color: #505D96;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #3A4A7A;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    /* ✅ 버튼 호버 시 색상 변경 */
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .small-text {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .small-text a {
+      text-decoration: none;
+      color: #505D96;
+      font-weight: bold;
+      margin: 0 10px;
+    }
+
+    .small-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div>
+  <div class="container">
+
+    <a th:href="@{/}">
+      <img th:src="@{/images/logo.png}" alt="룸메랑 로고" height="80">
+    </a>
+    <h1 class="title">나의 정보</h1>
+
+    <div class="form-group">
+      <label th:for="id">아이디</label>
+      <input type="text" th:value="${dto.username}" class="form-control" disabled>
+    </div>
+
+    <div class="form-group">
+      <label th:for="name">이름</label>
+      <input type="text" th:value="${dto.name}" class="form-control" disabled>
+    </div>
+    <div class="form-group">
+      <label th:for="birth">생년월일</label>
+      <input type="text" th:value="${dto.birthDate}" class="form-control" disabled>
+    </div>
+    <div class="form-group">
+      <label th:for="gender">성별</label>
+      <input type="text" th:value="${dto.gender}" class="form-control" disabled>
+    </div>
+
+    <div class="button-container">
+      <a href="/users/infoModify" class="btn btn-primary">수정</a>
+      <a href="/" class="btn btn-secondary">홈으로</a>
+    </div>
+    <br>
+
+    <div class = "small-text">
+      <a th:href="@{/auth/deleteId}">회원탈퇴</a>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

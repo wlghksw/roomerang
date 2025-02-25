@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>나눔해방 게시판</title>
+
+    <!-- ✅ 스타일-->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F9FA;
+        }
+
+        /* ✅ 네비게이션 바 스타일 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 20px 50px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            height: 60px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            gap: 50px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #777E90;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .nav-links a:hover {
+            color: #505D96;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .icons img {
+            width: 30px;
+            cursor: pointer;
+        }
+
+        .user-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-menu img {
+            width: 20px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            min-width: 150px;
+            z-index: 10;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #777E90;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* ✅ 방 없음 목록 스타일 */
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: #505D96;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ✅ 검색창 스타일 */
+       /* input[type="text"] {
+            padding: 12px 15px;                !* 입력창 내부 여백 *!
+            width: 300px;                      !* 입력창 너비 *!
+            border: 2px solid #505D96;         !* 테두리 색상 *!
+            border-radius: 8px;                !* 둥근 모서리 *!
+            font-size: 16px;                   !* 글자 크기 *!
+            outline: none;                     !* 포커스 시 기본 테두리 제거 *!
+            transition: border-color 0.3s;     !* 호버 시 부드러운 색상 전환 *!
+        }
+
+        input[type="text"]:focus {
+            border-color: #3A4A7A;             !* 클릭 시 테두리 색상 변경 *!
+        }*/
+
+        /* ✅ 검색창, 버튼들이 한 줄에 정렬되도록 설정 */
+        .search-container {
+            display: flex;             /* 가로 정렬 */
+            justify-content: center;   /* 가운데 정렬 */
+            /*align-items: center;*/       /* 세로 중앙 정렬 */
+            gap: 10px;                 /* 요소 간 간격 */
+        }
+
+        /* ✅ 검색창 스타일 */
+        .search-box {
+            width: 400px;              /* 검색창 너비 */
+            height: 45px;              /* 검색창 높이 (버튼과 동일하게 맞춤) */
+            padding: 10px 15px;        /* 내부 여백 */
+            font-size: 16px;           /* 글자 크기 */
+            border: 2px solid #505D96; /* 테두리 색상 */
+            border-radius: 8px;        /* 둥근 모서리 */
+            outline: none;             /* 클릭 시 기본 아웃라인 제거 */
+            box-sizing: border-box;    /* 패딩 포함한 크기 유지 */
+        }
+
+        /* ✅ 버튼 공통 스타일 (검색 버튼 & 글 등록 버튼) */
+        .btn-custom,
+        .write-button {
+            width: 100px;              /* 버튼 너비 (일관성 유지) */
+            height: 45px;              /* 버튼 높이 (검색창과 동일하게 맞춤) */
+            padding: 10px;             /* 내부 여백 */
+            font-size: 16px;           /* 글자 크기 */
+            font-weight: bold;         /* 글자 굵기 */
+            color: white;              /* 글자 색상 */
+            background-color: #505D96; /* 버튼 색상 */
+            border: none;              /* 기본 테두리 제거 */
+            border-radius: 8px;        /* 둥근 모서리 */
+            cursor: pointer;           /* 마우스 올릴 때 클릭 가능한 포인터 표시 */
+            display: flex;             /* 내부 정렬을 위해 flex 적용 */
+            justify-content: center;   /* 텍스트 가운데 정렬 */
+            align-items: center;       /* 세로 중앙 정렬 */
+            box-sizing: border-box;    /* 패딩 포함한 크기 유지 */
+        }
+
+        /* ✅ 버튼 호버 효과 */
+        .btn-custom:hover,
+        .write-button:hover {
+            background-color: #3A4A7A; /* 마우스 올릴 때 색상 변경 */
+        }
+
+
+        /* ✅ 페이징 스타일 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #505D96;
+            font-weight: bold;
+        }
+
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+
+        /* ✅ 카드 그리드 스타일 */
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .post-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .post-info {
+            padding: 15px;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .post-price {
+            font-size: 16px;
+            color: #505D96;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .post-location {
+            font-size: 14px;
+            color: #b0b0b0;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 🌟 메인 콘텐츠 -->
+<div layout:fragment="content">
+
+<div>
+    <h1>나눔해방 게시판</h1>
+
+    <!-- 검색 & 글쓰기 -->
+    <div class="search-container">
+        <form th:action="@{/share/search}" method="get">
+            <input type="text" name="keyword" placeholder="검색어 입력" class="search-box">
+        </form>
+
+        <button type="submit" class="btn-custom">검색</button>
+        <!-- 글 등록 버튼 -->
+        <a th:href="@{/share/create}" class="write-button">글 등록</a>
+    </div>
+
+
+
+    <!-- ✅ 게시글 카드 목록 -->
+    <div class="post-grid">
+        <div th:each="post : ${posts}" class="post-card"
+             th:onclick="|location.href='@{/share/{id}(id=${post.txnPostId})}'|">
+            <img th:src="${post.photoUrls != null and not #lists.isEmpty(post.photoUrls) ? post.photoUrls[0] : '/images/default.jpg'}"
+                 alt="게시글 이미지">
+            <div class="post-info">
+                <div class="post-title">
+                    <a th:href="@{/share/{id}(id=${post.txnPostId})}" th:text="${post.txnBoardTitle}"></a>
+                </div>
+                <div class="post-price" th:text="${post.price} + ' 원'"></div>
+                <div class="post-location" th:text="${post.location}"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <!-- ✅ 페이징 처리 -->
+    <div class="pagination">
+        <a th:if="${postPage.hasPrevious()}" th:href="@{/share/list(page=${postPage.number - 1}, size=${postPage.size})}">이전</a>
+        <span th:text="${postPage.number + 1}"></span> / <span th:text="${postPage.totalPages}"></span>
+        <a th:if="${postPage.hasNext()}" th:href="@{/share/list(page=${postPage.number + 1}, size=${postPage.size})}">다음</a>
+    </div>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const userMenu = document.querySelector(".toggle-button");
+        const dropdown = document.querySelector(".dropdown-content");
+
+        if (userMenu && dropdown) {
+            userMenu.addEventListener("click", function(event) {
+                event.stopPropagation();
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
+
+            document.addEventListener("click", function(event) {
+                if (!userMenu.contains(event.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

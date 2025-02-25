@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- ✅ 네비게이션 바 -->
+<div class="navbar" th:fragment="navbar">
+  <div class="logo">
+    <a th:href="@{/}">
+      <img th:src="@{/images/logo.png}" alt="로고">
+    </a>
+  </div>
+  <div class="nav-links">
+    <a th:href="@{/board/rooms}">매칭해방</a>
+    <a th:href="@{/share/list}">나눔해방</a>
+  </div>
+
+  <div class="header-right">
+    <div class="icons">
+      <a th:href="@{/chat/list}"><img th:src="@{/images/chat.png}" alt="채팅"></a>
+      <a href="#"><img th:src="@{/images/alarm.png}" alt="알림"></a>
+
+      <!-- 로그인 여부에 따라 "내정보" 버튼 표시 -->
+      <th:block th:if="${session.loginUser == null}">
+        <a href="@{/auth/login}" onclick="alert('로그인 후 이용해주세요'); return false;">
+          <img th:src="@{/images/my-page.png}" alt="내정보">
+        </a>
+      </th:block>
+
+      <th:block th:if="${session.loginUser != null}">
+        <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">
+          <img th:src="@{/images/my-page.png}" alt="내정보">
+        </a>
+      </th:block>
+    </div>
+
+    <div class="user-menu">
+      <!-- 로그인한 경우 유저 정보 및 드롭다운 메뉴 표시 -->
+      <th:block th:if="${session.loginUser != null}">
+        <span th:text="|${session.loginUser.name}님|"></span>
+        <img th:src="@{/images/plus.png}" alt="더보기" class="toggle-button">
+
+        <div class="dropdown-content">
+          <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">내 정보</a>
+          <a th:href="@{/favorite/list(userId=${session.loginUser.id})}">관심 목록</a>
+          <a href="#">리뷰 보기</a>
+          <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
+          <form id="logoutForm" th:action="@{/auth/logout}" method="post" style="display: none;"></form>
+        </div>
+      </th:block>
+
+      <!-- 로그인하지 않은 경우 "로그인 해주세요" 표시 -->
+      <th:block th:if="${session.loginUser == null}">
+        <a th:href="@{/auth/login}">로그인 해주세요</a>
+      </th:block>
+    </div>
+  </div>
+
+  <!-- 드롭다운 메뉴 스크립트 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const userMenu = document.querySelector(".toggle-button");
+      const dropdown = document.querySelector(".dropdown-content");
+
+      if (userMenu) {
+        userMenu.addEventListener("click", function (event) {
+          event.stopPropagation();
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!userMenu.contains(event.target) && dropdown) {
+            dropdown.style.display = "none";
+          }
+        });
+      }
+    });
+  </script>
+</div>
+
+</body>
+</html>

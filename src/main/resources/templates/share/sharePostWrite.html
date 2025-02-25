@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 등록</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    /* ✅ 기본 스타일 */
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #F8F9FA;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #505D96;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      height: 100px;
+      resize: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #505D96;
+      outline: none;
+      box-shadow: 0 0 5px rgba(80, 93, 150, 0.3);
+    }
+
+    /* ✅ 버튼 스타일 */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    .btn-primary {
+      background-color: #505D96;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #3A4A7A;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .preview-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* ✅ 한 줄에 4개 */
+      gap: 8px; /* ✅ 간격 조정 */
+      margin-top: 10px;
+      justify-items: center;
+    }
+
+    .preview-item {
+      width: 80px; /* ✅ 크기 줄임 */
+      height: 110px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .preview-item img {
+      width: 60px; /* ✅ 크기 줄임 */
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .preview-item .remove-btn {
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 3px;
+    }
+
+    /* ✅ 삭제 체크박스를 한 줄로 정렬 */
+    .preview-item .remove-btn {
+      display: flex;
+      align-items: center; /* ✅ 수직 중앙 정렬 */
+      gap: 3px; /* ✅ 체크박스와 삭제 텍스트 간격 */
+      font-size: 10px; /* ✅ 텍스트 크기 조정 */
+      margin-top: 5px;
+      white-space: nowrap; /* ✅ 줄 바꿈 방지 */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>게시글 등록</h1>
+
+  <form th:action="@{/share/create}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="userId" th:value="${loginUser?.username}">
+    <input type="hidden" name="authorName" th:value="${loginUser?.name}">
+
+    <div class="form-group">
+      <label for="txnBoardTitle">제목:</label>
+      <input type="text" id="txnBoardTitle" name="txnBoardTitle" required>
+    </div>
+
+    <div class="form-group">
+      <label for="txnBoardContent">내용:</label>
+      <textarea id="txnBoardContent" name="txnBoardContent" rows="5" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="location">지역 선택:</label>
+      <select id="location" name="location" required>
+        <option value="">지역을 선택하세요</option>
+        <option value="두정동">두정동</option>
+        <option value="쌍용동">쌍용동</option>
+        <option value="성정동">성정동</option>
+        <option value="신부동">신부동</option>
+        <option value="백석동">백석동</option>
+        <option value="불당동">불당동</option>
+        <option value="원성동">원성동</option>
+        <option value="용곡동">용곡동</option>
+        <option value="청수동">청수동</option>
+        <option value="신방동">신방동</option>
+        <option value="구성동">구성동</option>
+        <option value="중앙동">중앙동</option>
+        <option value="문성동">문성동</option>
+        <option value="목천읍">목천읍</option>
+        <option value="성환읍">성환읍</option>
+        <option value="병천면">병천면</option>
+        <option value="광덕면">광덕면</option>
+        <option value="업성동">업성동</option>
+        <option value="청당동">청당동</option>
+      </select>
+    </div>
+
+    <!-- ✅ 금액 입력 (월세/보증금 없음) -->
+    <div class="form-group">
+      <label for="price">금액:</label>
+      <input type="number" id="price" name="price" required>
+    </div>
+
+    <div id="photoUploadContainer">
+      <div class="form-group">
+        <label for="photos">사진 업로드 (최대 8개)</label>
+        <input type="file" id="photos" name="photos" accept="image/*" multiple onchange="previewImages(event)">
+      </div>
+
+      <!-- ✅ 미리보기 영역 -->
+      <div id="preview-container" class="preview-container"></div>
+    </div>
+
+    <div class="button-container">
+      <button type="submit" class="btn btn-primary">등록</button>
+      <a href="/share/list" class="btn btn-secondary">목록으로</a>
+    </div>
+  </form>
+</div>
+<script>
+  function validateFileLimit(input) {
+    const maxFiles = 8; // 최대 8개 파일만 업로드 가능
+    const previewContainer = document.getElementById("preview-container");
+    const currentImages = previewContainer.children.length; // 현재 미리보기 이미지 개수
+    const totalFiles = currentImages + input.files.length; // 기존 + 새로 추가된 이미지 개수
+
+    if (totalFiles > maxFiles) {
+      alert(`최대 ${maxFiles}개의 파일만 업로드할 수 있습니다.`);
+      input.value = ""; // 파일 선택 초기화
+      return;
+    }
+  }
+
+  function previewImages(event) {
+    const previewContainer = document.getElementById("preview-container");
+    previewContainer.innerHTML = ""; // 기존 미리보기 초기화
+    const files = event.target.files;
+
+    const maxFiles = 8;
+    const currentImages = previewContainer.children.length;
+    const totalFiles = currentImages + files.length;
+
+    if (totalFiles > maxFiles) {
+      alert("최대 8개의 이미지만 업로드할 수 있습니다.");
+      event.target.value = "";
+      return;
+    }
+
+    Array.from(files).forEach((file, index) => {
+      if (!file.type.startsWith("image/")) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const previewItem = document.createElement("div");
+        previewItem.classList.add("preview-item");
+
+        previewItem.innerHTML = `
+                <img src="${e.target.result}" alt="미리보기">
+                <label class="remove-btn">
+                    <input type="checkbox" onclick="removeImage(${index})"> 삭제
+                </label>
+            `;
+
+        previewContainer.appendChild(previewItem);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removeImage(index) {
+    const fileInput = document.getElementById("photos");
+    const dataTransfer = new DataTransfer();
+    const previewContainer = document.getElementById("preview-container");
+
+    // 현재 업로드된 파일에서 삭제 대상 제거
+    Array.from(fileInput.files).forEach((file, i) => {
+      if (i !== index) dataTransfer.items.add(file);
+    });
+
+    fileInput.files = dataTransfer.files;
+    previewImages({ target: fileInput }); // 미리보기 다시 생성
+  }
+
+  function toggleFields() {
+    var category = document.getElementById("category").value;
+    var extraFields = document.getElementById("extraFields");
+    var amountField = document.getElementById("amount");
+    var depositField = document.getElementById("deposit");
+    var photoUploadContainer = document.getElementById("photoUploadContainer"); // ✅ 사진 업로드 부분 가져오기
+    var photosInput = document.getElementById("photos"); // ✅ 파일 입력 필드
+
+    if (category === "방 있음") {
+      extraFields.style.display = "block";
+      amountField.required = true;
+      depositField.required = true;
+      photoUploadContainer.style.display = "block"; // ✅ 사진 업로드 보이기
+    } else {
+      extraFields.style.display = "none";
+      amountField.required = false;
+      depositField.required = false;
+      amountField.value = "0";
+      depositField.value = "0";
+      photoUploadContainer.style.display = "none"; // ✅ 사진 업로드 숨기기
+      photosInput.value = ""; // ✅ 사진 파일 초기화 (업로드 방지)
+    }
+  }
+
+  // ✅ 페이지 로드 시 한 번 실행 (초기 상태 반영)
+  document.addEventListener("DOMContentLoaded", function() {
+    toggleFields();
+  });
+</script>
+</body>
+</html>
