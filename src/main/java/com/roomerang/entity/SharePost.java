@@ -1,9 +1,11 @@
 package com.roomerang.entity;
 
+import com.roomerang.repository.SharePostRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,3 +51,4 @@ public class SharePost {
     @Column(name = "photo_url", length = 500)
     private List<String> photoUrls = new ArrayList<>();
 }
+

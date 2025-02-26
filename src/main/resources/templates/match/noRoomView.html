@@ -26,7 +26,6 @@
             min-width: 800px; /* ✅ 최소 너비 추가 */
             margin: 100px auto; /* ✅ 자동 중앙 정렬 */
             height: auto; /* ✅ 내부 콘텐츠에 맞게 크기 조절 */
-
         }
 
         /* ✅ 제목 + 찜 버튼 한 줄 정렬 */
@@ -194,7 +193,7 @@
             <th:block th:if="${session.loginUser != null and session.loginUser.username == post.userId}">
                 <a th:href="@{/board/post/edit/{id}(id=${post.rmPostId})}" class="btn btn-primary">수정</a>
                 <form th:action="@{/board/post/delete/{id}(id=${post.rmPostId})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger">삭제</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
                 </form>
             </th:block>
 

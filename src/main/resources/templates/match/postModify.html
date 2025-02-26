@@ -44,7 +44,7 @@
       margin-bottom: 5px;
     }
 
-    input, select, textarea {
+    input, select, textarea, option {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -307,6 +307,7 @@
       margin-top: 5px;
       white-space: nowrap; /* ✅ 줄 바꿈 방지 */
     }
+
   </style>
 
   <script>
@@ -346,8 +347,7 @@
 
     <div class="form-group">
       <label for="postContent">내용</label>
-      <textarea id="postContent" name="postContent"
-                placeholder="생활방식,음주여부,애완동물 여부,흡연 여부 등 사람들에게 알릴 것을 입력해주세요." required th:value="${post.rmBoardTitle}"></textarea>
+      <textarea id="postContent" name="postContent" placeholder="생활방식,음주여부,애완동물 여부,흡연 여부 등 사람들에게 알릴 것을 입력해주세요." required th:text="${post.postContent}"></textarea>
     </div>
 
     <!-- 방 있음일 경우에만 금액, 보증금 입력란 표시 -->
@@ -370,107 +370,109 @@
         <!-- ✅ 왼쪽 열 -->
         <div class="radio-column">
           <div class="radio-item">
-            <input type="radio" id="smoking_yes" name="smoking" value="true">
+            <input type="radio" id="smoking_yes" name="smoking" value="true"
+                   th:checked="${post.smoking == true}">
             <label for="smoking_yes">흡연자</label>
           </div>
           <div class="radio-item">
-            <input type="radio" id="pets_yes" name="pets" value="true">
+            <input type="radio" id="pets_yes" name="pets" value="true"
+                   th:checked="${post.pets == true}">
             <label for="pets_yes">반려동물 있음</label>
           </div>
           <div class="radio-item">
-            <input type="radio" id="morning" name="lifestylePattern" value="아침형 인간">
+            <input type="radio" id="morning" name="lifestylePattern" value="아침형 인간"
+                   th:checked="${post.lifestylePattern == '아침형 인간'}">
             <label for="morning">아침형 인간</label>
           </div>
         </div>
-
-        <!-- ✅ 오른쪽 열 -->
         <div class="radio-column">
           <div class="radio-item">
-            <input type="radio" id="smoking_no" name="smoking" value="false">
+            <input type="radio" id="smoking_no" name="smoking" value="false"
+                   th:checked="${post.smoking == false}">
             <label for="smoking_no">비흡연자</label>
           </div>
           <div class="radio-item">
-            <input type="radio" id="pets_no" name="pets" value="false">
+            <input type="radio" id="pets_no" name="pets" value="false"
+                   th:checked="${post.pets == false}">
             <label for="pets_no">반려동물 없음</label>
           </div>
           <div class="radio-item">
-            <input type="radio" id="night" name="lifestylePattern" value="밤형 인간">
+            <input type="radio" id="night" name="lifestylePattern" value="밤형 인간"
+                   th:checked="${post.pets == false}">
             <label for="night">밤형 인간</label>
           </div>
         </div>
       </div>
+    </div>
 
-
-      <div>
-        <div class="form-group">
-          <h3>현재 업로드된 사진</h3>
-          <th:block th:if="${post.photoUrls != null and not #lists.isEmpty(post.photoUrls)}">
-            <div>
-              <div class="uploaded-images">
-                <th:block th:each="photoUrl : ${post.photoUrls}">
-                  <div class="image-item">
-                    <img th:src="@{${photoUrl}}" alt="게시글 이미지">
-                    <div class="delete-container">
-                      <input type="checkbox" name="deleteImages" th:value="${photoUrl}">
-                      <label>삭제</label>
-                    </div>
+    <!-- 사진 관련 섹션을 감싸는 div 추가 -->
+    <div id="imageSection">
+      <div class="form-group">
+        <h3>현재 업로드된 사진</h3>
+        <th:block th:if="${post.photoUrls != null and not #lists.isEmpty(post.photoUrls)}">
+          <div>
+            <div class="uploaded-images">
+              <th:block th:each="photoUrl : ${post.photoUrls}">
+                <div class="image-item">
+                  <img th:src="@{${photoUrl}}" alt="게시글 이미지">
+                  <div class="delete-container">
+                    <input type="checkbox" name="deleteImages" th:value="${photoUrl}">
+                    <label>삭제</label>
                   </div>
-                </th:block>
-              </div>
+                </div>
+              </th:block>
             </div>
-          </th:block>
-        </div>
+          </div>
+        </th:block>
+      </div>
 
-        <div class="form-group">
-          <label for="newPhotos">새로운 사진 추가</label>
-          <input type="file" id="newPhotos" name="newPhotos" accept="image/*" multiple onchange="previewImages(event)">
-        </div>
+      <!-- 새 이미지 업로드 -->
+      <div class="form-group">
+        <label for="newPhotos">새로운 사진 추가</label>
+        <input type="file" id="newPhotos" name="photos" accept="image/*" multiple onchange="previewImages(event)">
+      </div>
 
-        <!-- ✅ 사진 미리보기 영역 -->
-        <div id="preview-container" class="uploaded-images"></div>
+      <!-- ✅ 추가한 미리보기 UI -->
+      <div id="preview-container" class="uploaded-images"></div>
+    </div>
 
-        <br><br>
+    <!-- 지역 선택 -->
+    <div class="form-group">
+      <label for="authorRegion">지역</label>
+      <select name="authorRegion" id="authorRegion" required>
+        <option value="">지역을 선택하세요</option>
+        <option value="두정동" th:selected="${post.authorRegion == '두정동'}">두정동</option>
+        <option value="쌍용동" th:selected="${post.authorRegion == '쌍용동'}">쌍용동</option>
+        <option value="성정동" th:selected="${post.authorRegion == '성정동'}">성정동</option>
+        <option value="신부동" th:selected="${post.authorRegion == '신부동'}">신부동</option>
+        <option value="백석동" th:selected="${post.authorRegion == '백석동'}">백석동</option>
+        <option value="불당동" th:selected="${post.authorRegion == '불당동'}">불당동</option>
+        <option value="원성동" th:selected="${post.authorRegion == '원성동'}">원성동</option>
+        <option value="용곡동" th:selected="${post.authorRegion == '용곡동'}">용곡동</option>
+        <option value="청수동" th:selected="${post.authorRegion == '청수동'}">청수동</option>
+        <option value="신방동" th:selected="${post.authorRegion == '신방동'}">신방동</option>
+        <option value="구성동" th:selected="${post.authorRegion == '구성동'}">구성동</option>
+        <option value="중앙동" th:selected="${post.authorRegion == '중앙동'}">중앙동</option>
+        <option value="문성동" th:selected="${post.authorRegion == '문성동'}">문성동</option>
+        <option value="목천읍" th:selected="${post.authorRegion == '목천읍'}">목천읍</option>
+        <option value="성환읍" th:selected="${post.authorRegion == '성환읍'}">성환읍</option>
+        <option value="병천면" th:selected="${post.authorRegion == '병천면'}">병천면</option>
+        <option value="광덕면" th:selected="${post.authorRegion == '광덕면'}">광덕면</option>
+        <option value="업성동" th:selected="${post.authorRegion == '업성동'}">업성동</option>
+        <option value="청당동" th:selected="${post.authorRegion == '청당동'}">청당동</option>
+      </select>
+    </div>
 
-        <!-- 지역 선택 -->
-        <div class="form-group">
-          <label for="authorRegion">지역</label>
-          <select name="authorRegion" id="authorRegion" required>
-            <option value="">지역을 선택하세요</option>
-            <option value="두정동" th:selected="${post.authorRegion == '두정동'}">두정동</option>
-            <option value="쌍용동" th:selected="${post.authorRegion == '쌍용동'}">쌍용동</option>
-            <option value="성정동" th:selected="${post.authorRegion == '성정동'}">성정동</option>
-            <option value="신부동" th:selected="${post.authorRegion == '신부동'}">신부동</option>
-            <option value="백석동" th:selected="${post.authorRegion == '백석동'}">백석동</option>
-            <option value="불당동" th:selected="${post.authorRegion == '불당동'}">불당동</option>
-            <option value="원성동" th:selected="${post.authorRegion == '원성동'}">원성동</option>
-            <option value="용곡동" th:selected="${post.authorRegion == '용곡동'}">용곡동</option>
-            <option value="청수동" th:selected="${post.authorRegion == '청수동'}">청수동</option>
-            <option value="신방동" th:selected="${post.authorRegion == '신방동'}">신방동</option>
-            <option value="구성동" th:selected="${post.authorRegion == '구성동'}">구성동</option>
-            <option value="중앙동" th:selected="${post.authorRegion == '중앙동'}">중앙동</option>
-            <option value="문성동" th:selected="${post.authorRegion == '문성동'}">문성동</option>
-            <option value="목천읍" th:selected="${post.authorRegion == '목천읍'}">목천읍</option>
-            <option value="성환읍" th:selected="${post.authorRegion == '성환읍'}">성환읍</option>
-            <option value="병천면" th:selected="${post.authorRegion == '병천면'}">병천면</option>
-            <option value="광덕면" th:selected="${post.authorRegion == '광덕면'}">광덕면</option>
-            <option value="업성동" th:selected="${post.authorRegion == '업성동'}">업성동</option>
-            <option value="청당동" th:selected="${post.authorRegion == '청당동'}">청당동</option>
-          </select>
-        </div>
+    <br><br>
 
-        <br><br>
-
-        <div class="button-container">
-          <button type="submit" class="btn btn-primary">수정</button>
-          <a th:href="@{/board/post/{id}(id=${post.rmPostId})}" class="btn btn-cancel">취소</a>
-        </div>
+    <div class="button-container">
+      <button type="submit" class="btn btn-primary">수정</button>
+      <a th:href="@{/board/post/{id}(id=${post.rmPostId})}" class="btn btn-cancel">취소</a>
+    </div>
   </form>
-
-
-
 </div>
+
 <script>
-  toggleFields(); // 페이지 로드 시 올바른 필드 표시
 
   function previewImages(event) {
     const previewContainer = document.getElementById("preview-container");
@@ -520,6 +522,24 @@
     fileInput.files = dataTransfer.files;
     previewImages({ target: fileInput });
   }
+
+  function toggleFields() {
+    var category = document.getElementById("category").value;
+    var extraFields = document.getElementById("extraFields");
+    var imageSection = document.getElementById("imageSection"); // ✅ 사진 관련 필드
+
+    if (category === "방 있음") {
+      extraFields.style.display = "block";
+      imageSection.style.display = "block"; // ✅ 사진 추가 보이기
+    } else {
+      extraFields.style.display = "none";
+      imageSection.style.display = "none"; // ✅ 사진 추가 숨기기
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    toggleFields(); // ✅ 페이지 로드 시 실행
+  });
 
 
 </script>

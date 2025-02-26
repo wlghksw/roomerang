@@ -76,6 +76,10 @@ public class SharePostController {
         SharePost post = sharePostService.getPostById(id);
         String postType="SHARE";
 
+        // 조회수 증가
+        post.setViewCount(post.getViewCount() + 1);
+        sharePostService.savePost(post);
+
         // 로그인한 사용자 확인
         HttpSession session = request.getSession(false);
         User loginUser = (session != null) ? (User) session.getAttribute(SessionConst.LOGIN_USER) : null;

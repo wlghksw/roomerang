@@ -1,6 +1,7 @@
 package com.roomerang.service;
 
 import com.roomerang.entity.FavoritePost;
+import com.roomerang.entity.Post;
 import com.roomerang.entity.SharePost;
 import com.roomerang.repository.FavoritePostRepository;
 import com.roomerang.repository.SharePostRepository;
@@ -120,5 +121,10 @@ public class SharePostService {
         favoritePostRepository.deleteByPostId(id);
 
         sharePostRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void savePost(SharePost sharePost) {
+        sharePostRepository.save(sharePost);
     }
 }

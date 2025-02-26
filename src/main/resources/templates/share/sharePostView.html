@@ -9,31 +9,24 @@
   <style>
     /* ✅ 기본 설정 */
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #F5F7FA;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 80vh;
-      margin-top : 150px;
-    }
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F5F7FA;
+            margin:20px;
+            padding: 20px;
+        }
 
-    .container {
-      max-width: 1000px;
-      width: 90%;
-      background: transparent; /* ✅ 연한 회색 */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)!important;
-      padding-top: 250px;
-      padding : 40px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto;
-    }
+        /* ✅ 전체 컨테이너 */
+        .container {
+            background: transparent;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px; /* ✅ 컨테이너 크기 증가 */
+            min-width: 800px; /* ✅ 최소 너비 추가 */
+            margin: 100px auto; /* ✅ 자동 중앙 정렬 */
+            height: auto; /* ✅ 내부 콘텐츠에 맞게 크기 조절 */
+        }
 
     /* ✅ 이미지 + 정보 컨테이너 */
     .post-header {
