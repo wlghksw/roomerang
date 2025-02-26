@@ -60,6 +60,7 @@ public class SharePostController {
         Page<SharePost> postPage = sharePostService.getAllPosts(page, size);
         User loginUser = getLoginUser(request);
 
+
         model.addAttribute("postType","SHARE");
         model.addAttribute("postPage", postPage);
         model.addAttribute("posts", postPage.getContent());
@@ -75,6 +76,8 @@ public class SharePostController {
     public String getPostById(@PathVariable Long id, Model model, HttpServletRequest request) {
         SharePost post = sharePostService.getPostById(id);
         String postType="SHARE";
+
+        post.setViewCount(post.getViewCount() + 1);
 
         // 로그인한 사용자 확인
         HttpSession session = request.getSession(false);
