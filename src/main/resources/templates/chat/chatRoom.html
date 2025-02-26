@@ -168,9 +168,44 @@
           display: none;
         }
 
+        .btnOut {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #505D96;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+
+            /* 왼쪽 상단에 고정 */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .btnOut:hover {
+            background-color: #3e497a;
+        }
+
+        .btnOut::before {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
     </style>
 </head>
 <body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!--<form th:action="@{/chat/list}" method="get">-->
+    <button type="button" th:onclick="|location.href='@{/chat/list}'|" class="btnOut">
+        <i class="fa-solid fa-arrow-left"></i>
+    </button>
+</form>
 <h1>채팅방</h1>
 
 <!--<h1 th:text="${chatRoom.type == 'matching' ? '매칭해방 채팅방' : '나눔해방 채팅방'}"></h1>-->
@@ -236,9 +271,7 @@
         <button type="submit" class="btn send">전송</button>
     </form>
 
-    <form th:action="@{/chat/list}" method="get">
-        <button type="submit" class="btnOut">뒤로가기</button>
-    </form>
+
 
 
 </div>

@@ -105,22 +105,22 @@
     <table>
         <thead>
         <tr>
-            <th>제목</th>
             <th>게시판</th>
+            <th>제목</th>
             <th>삭제</th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="post : ${favoritePosts}" th:id="|favorite-item-${post.postId}|">
+            <td th:text="${post.postType == 'MATCH' ? '매칭해방' : post.postType == 'NO_ROOM' ? '매칭해방' : '나눔해방'}"></td>
             <td>
-                <a th:href="@{/{path}/{postId}(path=${post.postType == 'MATCH' or post.postType == 'NO_ROOM' ? 'board/post' : 'share'}, postId=${post.postId})}"
+            <a th:href="@{/{path}/{postId}(path=${post.postType == 'MATCH' or post.postType == 'NO_ROOM' ? 'board/post' : 'share'}, postId=${post.postId})}"
                    th:text="${post.postTitle}" style="text-decoration: none; color: #505D96; font-weight: bold;">
                 </a>
             </td>
-            <td th:text="${post.postType == 'MATCH' ? '매칭해방' : post.postType == 'NO_ROOM' ? '매칭해방' : '나눔해방'}"></td>
             <td>
-                <button class="delete-button" th:onclick="|deleteFavorite(${post.postId})|">삭제</button>
+            <button class="delete-button" th:onclick="|deleteFavorite(${post.postId})|">삭제</button>
             </td>
         </tr>
         </tbody>

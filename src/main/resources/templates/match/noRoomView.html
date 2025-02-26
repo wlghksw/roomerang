@@ -210,11 +210,16 @@
 
     <script th:inline="javascript">
         function toggleFavorite() {
-            var userId = [[${loginUser.id}]]; // 실제 로그인된 사용자 ID로 대체
-            console.log(userId);
-            var postId = [[${post.rmPostId}]]; // 실제 게시글 ID로 대체
-            var postType = "NO_ROOM"; // 현재 페이지에 맞게 변경
-            var postTitle = [[${post.rmBoardTitle}]]; //실제 게시글 title로 대체
+            var userId = [[${session.loginUser != null ? session.loginUser.id : 'null'}]];
+            if (userId === 'null') {
+                alert("로그인이 필요합니다.");
+                window.location.href = "/auth/login";
+                return;
+            }
+
+            var postId = [[${post.rmPostId}]];
+            var postType = "MATCH";
+            var postTitle = [[${post.rmBoardTitle}]];
 
             fetch('/favorite/toggle?userId=' + userId + '&postId=' + postId + '&postType=' + postType + '&postTitle=' + postTitle, {
                 method: 'POST'
@@ -223,16 +228,16 @@
                 .then(data => {
                     var img = document.getElementById("favorite-img");
                     if (img.src.includes("binH.png")) {
-                        data="등록되었습니다";
+                        data = "등록되었습니다";
                         img.src = "/images/fullH.png"; // 찜 등록 상태로 변경
                     } else {
-                        data="둥록 취소되었습니다."
+                        data = "등록 취소되었습니다.";
                         img.src = "/images/binH.png"; // 찜 해제 상태로 변경
                     }
-
-                    alert(data); // "등록되었습니다." 또는 "등록 취소되었습니다."
+                    alert(data);
                 });
         }
+
     </script>
 </div>
 </body>

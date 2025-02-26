@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,28 +75,74 @@
       background-color: #5a6268;
     }
   </style>
-  <script>
-    function confirmWithdrawal() {
-      if (confirm("정말로 회원탈퇴 하시겠습니까?")) {
-        // Redirect to withdrawal processing page (replace with your backend URL)
-        window.location.href = "/";
-      } else {
-        alert("회원탈퇴가 취소되었습니다.");
-      }
-    }
-  </script>
 
 </head>
 <body>
+
 <div class="withdrawal-container">
   <h2>회원탈퇴</h2>
   <p>정말로 회원탈퇴를 하시겠습니까?</p>
 
   <div class="button-container">
-    <a th:href="@{/users/remove(id=${session.loginUser.id})}"
-       class="btn" onclick="confirmWithdrawal()">회원 탈퇴</a>
+    <a class="btn" th:data-user-id="${session.loginUser.id}" onclick="confirmWithdrawal(this)">회원 탈퇴</a>
+
     <a class="btn return-btn" onclick="history.back()">돌아가기</a>
   </div>
 </div>
+
+<!-- 📌 script 태그를 body 끝에 위치시킴 -->
+
+<script>
+  function confirmWithdrawal(element) {
+
+    const userId = element.getAttribute("data-user-id");
+
+    console.log("userId:", userId);
+
+    if (!userId) {
+      alert("회원 ID를 찾을 수 없습니다.");
+      return;
+    }
+
+    if (confirm("정말로 회원탈퇴 하시겠습니까?")) {
+
+      fetch("/users/remove", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: userId })
+      })
+              .then(response => {
+
+                if (!response.ok) {
+                  return response.json().then(error => {
+                    alert(error.message);
+                    throw new Error(error.message);
+                  }).catch(() => {
+                    throw new Error("서버 오류 발생");
+                  });
+
+                }
+                <!--return response.json();-->
+
+                return response.text().then(text => text ? JSON.parse(text) : {});
+
+              })
+              .then(data => {
+                alert("회원탈퇴가 완료되었습니다.");
+                window.location.href = "logout";
+              })
+              .catch(error => {
+                console.error("회원탈퇴 요청 중 오류 발생:", error);
+                alert("회원탈퇴 처리 중 오류가 발생했습니다.");
+              });
+
+    } else {
+      alert("회원탈퇴가 취소되었습니다.");
+    }
+
+  }
+</script>
 </body>
 </html>

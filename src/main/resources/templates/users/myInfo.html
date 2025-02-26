@@ -6,63 +6,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    /* 전체 페이지 스타일 */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #F8F9FA;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: #F8F9FC;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
     }
 
-    /* 컨테이너 박스 */
     .container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       width: 400px;
       text-align: center;
     }
 
-    /* 제목 스타일 */
-    .title {
+    h1 {
       font-size: 24px;
       font-weight: bold;
       color: #505D96;
       margin-bottom: 20px;
     }
 
-    /* 폼 그룹 스타일 */
+    p {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
     .form-group {
-      margin-bottom: 15px;
       text-align: left;
+      margin-bottom: 15px;
     }
 
     .form-group label {
-      display: block;
-      font-size: 14px;
       font-weight: bold;
-      color: #333;
+      font-size: 14px;
+      display: block;
       margin-bottom: 5px;
     }
 
-    /* 입력 필드 스타일 */
-    .form-control {
-      width: 378px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background-color: #f8f9fa;
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background-color: #EDF2F7;
+      font-size: 14px;
       color: #333;
       cursor: not-allowed;
     }
 
-    /* 버튼 컨테이너 */
     .button-container {
       display: flex;
       justify-content: center;
@@ -70,7 +73,6 @@
       margin-top: 20px;
     }
 
-    /* 버튼 스타일 */
     .btn {
       width: 120px;
       height: 40px;
@@ -79,10 +81,10 @@
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      display: flex;  /* 📌 버튼 내부 요소 중앙 정렬 */
+      display: flex;
       align-items: center;
       justify-content: center;
-      text-decoration: none; /* 📌 밑줄 제거 */
+      text-decoration: none;
     }
 
     .btn-primary {
@@ -99,7 +101,6 @@
       color: white;
     }
 
-    /* ✅ 버튼 호버 시 색상 변경 */
     .btn-secondary:hover {
       background-color: #5a6268;
     }
@@ -150,7 +151,7 @@
     </div>
 
     <div class="button-container">
-      <a href="/users/infoModify" class="btn btn-primary">수정</a>
+      <a href="/users/changePassword" class="btn btn-primary">비밀번호 수정</a>
       <a href="/" class="btn btn-secondary">홈으로</a>
     </div>
     <br>

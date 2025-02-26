@@ -192,18 +192,37 @@ public class UserServiceImpl implements UserService {
         return result.isPresent() ? entityToDto(result.get()) : null;
     }
 
+    public void validatePassword1(String currentPassword, String newPassword, BindingResult bindingResult) {
+        if (currentPassword.equals(newPassword)) {
+            bindingResult.rejectValue("newPassword", "newPasswordError", "현재 비밀번호와 동일합니다.");
+        }
+    }
+
     @Override
     @Transactional
     public boolean remove(Long id) {
 
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            log.info("사용자 삭제 성공. ID: {}", id);
-            return true;
-        } else {
+        if (!userRepository.existsById(id)) {
             log.error("사용자 삭제 실패 - 존재하지 않음. ID: {}", id);
-            throw new RuntimeException("회원이 존재하지 않습니다.");
+            return false;
         }
+
+        userRepository.deleteById(id);
+        log.info("사용자 삭제 성공. ID: {}", id);
+        return true;
+    }
+
+    @Override
+    public int passwordConfirmation(String currentPW, Long userNo) {
+        log.info("current ; " + currentPW);
+        log.info("userNo ; " + userNo);
+
+        return userRepository.findById(userNo).
+                filter(u -> passwordEncoder.matches(currentPW, u.getPassword()))
+                .map(u ->1)
+                .orElse(0);
+
+
     }
 
 

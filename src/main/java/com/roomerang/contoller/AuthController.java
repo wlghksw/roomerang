@@ -293,13 +293,22 @@ public class AuthController {
         return "auth/reset-password-success"; // 비밀번호 변경 성공 후 로그인 페이지로 리다이렉트
     }
 
-    //회원 탈퇴
     @GetMapping("/deleteId")
-    public String userDeleted(Long id, Model model) {
-
+    public String userDeleted(@SessionAttribute("loginUser") User loginUser, Model model) {
+        Long id = loginUser.getId();
+        log.info("aaaaaaaaaaaaaaaaa : "+id);
         model.addAttribute("id", id);
         return "auth/deleteIdForm";
 
+    }
+
+    @GetMapping("/logout")
+    public String logout1(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        return "redirect:/"; // 메인 페이지로 이동
     }
 
     @GetMapping("/terms")

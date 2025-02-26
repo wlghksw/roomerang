@@ -44,7 +44,7 @@ public class SharePost {
     private LocalDateTime postDate;
 
     @Column(nullable = false)
-    private Integer viewCount;
+    private Integer viewCount = 0;
 
     @ElementCollection
     @CollectionTable(name = "sharepost_images", joinColumns = @JoinColumn(name = "txn_post_id"))

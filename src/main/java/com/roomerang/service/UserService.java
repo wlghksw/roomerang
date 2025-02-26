@@ -36,6 +36,10 @@ public interface UserService {
 
     public boolean remove(Long id);
 
+    void validatePassword1(String password, String confirmPassword, BindingResult bindingResult);
+
+    int passwordConfirmation(String currentPW, Long userNo);
+
     default User dtoToEntity(UserDTO dto) {
         User entity = User.builder()
                 .id(dto.getId())
