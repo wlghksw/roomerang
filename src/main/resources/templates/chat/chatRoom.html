@@ -178,6 +178,7 @@
 <div id="chatBox">
     <ul>
         <th:block th:each="message : ${messages}">
+
             <!-- 내 메시지 (오른쪽) -->
             <li th:if="${message.senderId == session.userId}" class="message me">
                 <strong th:text="${message.senderId}"></strong>

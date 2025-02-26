@@ -60,18 +60,18 @@
 
   <!-- 드롭다운 메뉴 스크립트 -->
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       const userMenu = document.querySelector(".toggle-button");
       const dropdown = document.querySelector(".dropdown-content");
 
-      if (userMenu) {
-        userMenu.addEventListener("click", function (event) {
+      if (userMenu && dropdown) {
+        userMenu.addEventListener("click", function(event) {
           event.stopPropagation();
           dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
         });
 
-        document.addEventListener("click", function (event) {
-          if (!userMenu.contains(event.target) && dropdown) {
+        document.addEventListener("click", function(event) {
+          if (!userMenu.contains(event.target)) {
             dropdown.style.display = "none";
           }
         });

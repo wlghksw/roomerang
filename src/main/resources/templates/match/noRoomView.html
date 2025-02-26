@@ -199,12 +199,13 @@
             </th:block>
 
             <!--채팅-->
-            <th:block th:if="${loginUser != null and post.userId != loginUser.username}">
+            <th:block th:if="${session.loginUser != null and post.userId != session.loginUser.username}">
                 <form th:action="@{/chat/start/{postId}(postId=${post.rmPostId})}" method="post">
                     <input type="hidden" name="type" value="matching">  <!— ✅ type 값 추가 —>
                     <button type="submit" class="btn btn-chat">채팅하기</button>
                 </form>
             </th:block>
+
         </div>
     </div>
 

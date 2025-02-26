@@ -110,6 +110,7 @@
             <th>삭제</th>
         </tr>
         </thead>
+
         <tbody>
         <tr th:each="post : ${favoritePosts}" th:id="|favorite-item-${post.postId}|">
             <td>
@@ -124,34 +125,42 @@
         </tr>
         </tbody>
     </table>
-</div>
 
-<script th:inline="javascript">
-    function deleteFavorite(postId) {
-        let userId = [[${userId}]];
+    <script th:inline="javascript">
+        // 🔹 deleteFavorite 함수 정의
+        function deleteFavorite(postId) {
+            let userId = [[${userId}]];
 
-    fetch("/favorite/delete", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({ userId: userId, postId: postId })
-    })
-        .then(response => response.text())
-        .then(result => {
-        if (result.trim() === "success") {
-            alert("삭제되었습니다.");
-            document.getElementById("favorite-item-" + postId).remove();
-        } else {
-            alert("삭제 실패: 서버에서 삭제할 데이터를 찾지 못했습니다.");
+            if (!userId) {
+                alert("사용자 정보가 올바르게 설정되지 않았습니다.");
+                return;
+            }
+
+            fetch("/favorite/delete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({ userId: userId, postId: postId })
+            })
+                .then(response => response.text())
+                .then(result => {
+                    if (result.trim() === "success") {
+                        alert("삭제되었습니다.");
+                        document.getElementById("favorite-item-" + postId).remove();
+                    } else {
+                        alert("삭제 실패: 서버에서 삭제할 데이터를 찾지 못했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error("삭제 중 오류 발생:", error);
+                    alert("서버 오류 발생. 다시 시도해 주세요.");
+                });
         }
-    })
-        .catch(error => {
-        console.error("삭제 중 오류 발생:", error);
-        alert("서버 오류 발생. 다시 시도해 주세요.");
-    });
-    }
-</script>
 
+        window.deleteFavorite = deleteFavorite;
+    </script>
+
+</div>
 </body>
 </html>

@@ -50,7 +50,6 @@
         .search-container {
             display: flex;             /* 가로 정렬 */
             justify-content: center;   /* 가운데 정렬 */
-            /*align-items: center;*/       /* 세로 중앙 정렬 */
             gap: 10px;                 /* 요소 간 간격 */
         }
 
@@ -219,6 +218,26 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const userMenu = document.querySelector(".toggle-button");
+        const dropdown = document.querySelector(".dropdown-content");
+
+        if (userMenu && dropdown) {
+            userMenu.addEventListener("click", function(event) {
+                event.stopPropagation();
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
+ q
+            document.addEventListener("click", function(event) {
+                if (!userMenu.contains(event.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

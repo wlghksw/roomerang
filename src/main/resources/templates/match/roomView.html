@@ -404,12 +404,7 @@
                 <img id="favorite-img" th:unless = "${isFavorite == true}" th:src="@{/images/binH.png}" alt="찜" class="wishlist" onclick="toggleFavorite()">
                 </div>
             </div>
-            <th:block th:if="${loginUser != null and post.userId != loginUser.username}">
-                <form th:action="@{/chat/start/{postId}(postId=${post.rmPostId})}" method="post">
-                    <input type="hidden" name="type" value="matching">  <!— ✅ type 값 추가 —>
-                    <button type="submit">채팅하기</button>
-                </form>
-            </th:block>
+
             <p class="post-meta">
                 <span th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}"></span> •
                 조회수 <span th:text="${post.postViews}"></span> •
@@ -457,6 +452,14 @@
             <a th:href="@{/board/post/edit/{id}(id=${post.rmPostId})}" class="btn btn-primary">수정</a>
             <form th:action="@{/board/post/delete/{id}(id=${post.rmPostId})}" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-danger">삭제</button>
+            </form>
+        </th:block>
+
+        <!--채팅-->
+        <th:block th:if="${loginUser != null and post.userId != loginUser.username}">
+            <form th:action="@{/chat/start/{postId}(postId=${post.rmPostId})}" method="post">
+                <input type="hidden" name="type" value="matching">  <!— ✅ type 값 추가 —>
+                <button type="submit" class="btn btn-chat">채팅하기</button>
             </form>
         </th:block>
     </div>

@@ -16,84 +16,6 @@
             background-color: #F8F9FA;
         }
 
-        /* ✅ 네비게이션 바 스타일 */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: white;
-            padding: 20px 50px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo img {
-            height: 60px;
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            flex-grow: 1;
-            gap: 50px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #777E90;
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .nav-links a:hover {
-            color: #505D96;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 35px;
-        }
-
-        .icons img {
-            width: 30px;
-            cursor: pointer;
-        }
-
-        .user-menu {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .user-menu img {
-            width: 20px;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 40px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            min-width: 150px;
-            z-index: 10;
-        }
-
-        .dropdown-content a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #777E90;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
         /* ✅ 방 없음 목록 스타일 */
         h1 {
             text-align: center;
@@ -106,26 +28,10 @@
             margin-bottom: 20px;
         }
 
-        /* ✅ 검색창 스타일 */
-       /* input[type="text"] {
-            padding: 12px 15px;                !* 입력창 내부 여백 *!
-            width: 300px;                      !* 입력창 너비 *!
-            border: 2px solid #505D96;         !* 테두리 색상 *!
-            border-radius: 8px;                !* 둥근 모서리 *!
-            font-size: 16px;                   !* 글자 크기 *!
-            outline: none;                     !* 포커스 시 기본 테두리 제거 *!
-            transition: border-color 0.3s;     !* 호버 시 부드러운 색상 전환 *!
-        }
-
-        input[type="text"]:focus {
-            border-color: #3A4A7A;             !* 클릭 시 테두리 색상 변경 *!
-        }*/
-
         /* ✅ 검색창, 버튼들이 한 줄에 정렬되도록 설정 */
         .search-container {
             display: flex;             /* 가로 정렬 */
             justify-content: center;   /* 가운데 정렬 */
-            /*align-items: center;*/       /* 세로 중앙 정렬 */
             gap: 10px;                 /* 요소 간 간격 */
         }
 
@@ -268,9 +174,7 @@
             <img th:src="${post.photoUrls != null and not #lists.isEmpty(post.photoUrls) ? post.photoUrls[0] : '/images/default.jpg'}"
                  alt="게시글 이미지">
             <div class="post-info">
-                <div class="post-title">
-                    <a th:href="@{/share/{id}(id=${post.txnPostId})}" th:text="${post.txnBoardTitle}"></a>
-                </div>
+                <div class="post-title" th:href="@{/share/{id}(id=${post.txnPostId})}" th:text="${post.txnBoardTitle}" style="text-decoration: none; color: black"></div>
                 <div class="post-price" th:text="${post.price} + ' 원'"></div>
                 <div class="post-location" th:text="${post.location}"></div>
             </div>
@@ -285,6 +189,7 @@
         <span th:text="${postPage.number + 1}"></span> / <span th:text="${postPage.totalPages}"></span>
         <a th:if="${postPage.hasNext()}" th:href="@{/share/list(page=${postPage.number + 1}, size=${postPage.size})}">다음</a>
     </div>
+</div>
 
 
     <script>

@@ -28,13 +28,53 @@
       margin-bottom: 20px;
     }
 
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #505D96;
+      color: white;
+    }
+
+    td {
+      background-color: white;
+    }
+
+    /* ✅ 페이징 스타일 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .pagination a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #505D96;
+      font-weight: bold;
+    }
+
+    .pagination a:hover {
+      text-decoration: underline;
+    }
+
     /* ✅ 검색창, 버튼들이 한 줄에 정렬되도록 설정 */
     .search-container {
       display: flex;             /* 가로 정렬 */
       justify-content: center;   /* 가운데 정렬 */
-      align-items: center;       /* 세로 중앙 정렬 */
       gap: 10px;                 /* 요소 간 간격 */
-      margin-top: 20px;
     }
 
     /* ✅ 검색창 스타일 */
@@ -93,55 +133,11 @@
       align-items: center;       /* 세로 중앙 정렬 */
       box-sizing: border-box;    /* 패딩 포함한 크기 유지 */
       transition: border-color 0.3s;
-      margin-top: 20px;
     }
 
     .category-select:hover {
       border-color: #3A4A7A;
     }
-
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-    }
-
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-
-    th, td {
-      padding: 15px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #505D96;
-      color: white;
-    }
-
-    td {
-      background-color: white;
-    }
-
-    /* ✅ 페이징 스타일 */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-    }
-
-    .pagination a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #505D96;
-      font-weight: bold;
-    }
-
-    .pagination a:hover {
-      text-decoration: underline;
-    }
-
 
   </style>
 </head>
@@ -150,54 +146,61 @@
 <!-- 🌟 메인 콘텐츠 -->
 <div layout:fragment="content">
 
-  <!-- ✅ 방 없음 목록 -->
   <h1>방 없음 목록</h1>
+
+
 
   <div class="search-container">
 
-    <!-- 카테고리 선택 -->
-    <form>
-      <select class="category-select" onchange="location = this.value;">
-        <option value="/board/no-rooms" selected>방 없음</option>
-        <option value="/board/rooms">방 있음</option>
-      </select>
-    </form>
+  <!-- 카테고리 선택 -->
+  <form>
+    <select class="category-select" onchange="location = this.value;">
+      <option value="/board/no-rooms" selected>방 없음</option>
+      <option value="/board/rooms">방 있음</option>
+    </select>
+  </form>
 
-
-    <form th:action="@{/board/search}" method="get" class="search-container">
-      <input type="hidden" name="category" value="방 없음">
-      <input class="search-box" type="text" name="keyword" placeholder="제목 또는 작성자 검색" th:value="${keyword}">
-      <button type="submit" class="btn-custom">검색</button>
-    </form>
+  <!-- ✅ 방 없음 목록 -->
+    <div class="search-container">
+  <form th:action="@{/board/search}" method="get">
+    <input type="hidden" name="category" value="방 없음">
+    <input class="search-box" type="text" name="keyword" placeholder="제목 또는 작성자 검색" th:value="${keyword}">
+  </form>
+    <button type="submit" class="btn-custom">검색</button>
 
     <!-- 글 등록 버튼 -->
-    <a th:href="@{/board/post/create}" class="write-button">글 등록</a>
+    <a th:href="@{/board/post/create(category='방 없음')}" class="write-button">글 등록</a>
+
+    </div>
+
 
   </div>
 
-  <table>
-    <tr>
-      <th>제목</th>
-      <th>작성자</th>
-      <th>조회수</th>
-      <th>날짜</th>
-      <th>지역</th>
-    </tr>
-    <tr th:each="post : ${postsPage.content}">
-      <td><a th:href="@{/board/post/{id}(id=${post.rmPostId})}" th:text="${post.rmBoardTitle}" style="text-decoration: none;"></a></td>
-      <td th:text="${post.authorName}"></td>
-      <td th:text="${post.postViews}"></td>
-      <td th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}"></td>
-      <td th:text="${post.authorRegion}"></td>
-    </tr>
-  </table>
+<table>
+  <tr>
+    <th>제목</th>
+    <th>작성자</th>
+    <th>조회수</th>
+    <th>날짜</th>
+    <th>지역</th>
+  </tr>
+  <tr th:each="post : ${postsPage.content}">
+    <td><a th:href="@{/board/post/{id}(id=${post.rmPostId})}" th:text="${post.rmBoardTitle}"></a></td>
+    <td th:text="${post.authorName}"></td>
+    <td th:text="${post.postViews}"></td>
+    <td th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}"></td>
+    <td th:text="${post.authorRegion}"></td>
+  </tr>
+</table>
 
-  <!-- 페이징 -->
-  <div class="pagination">
-    <a th:if="${postsPage.hasPrevious()}" th:href="@{/board/no-rooms(page=${postsPage.number - 1}, size=${postsPage.size})}">이전</a>
-    <span th:text="${postsPage.number + 1}"></span> / <span th:text="${postsPage.totalPages}"></span>
-    <a th:if="${postsPage.hasNext()}" th:href="@{/board/no-rooms(page=${postsPage.number + 1}, size=${postsPage.size})}">다음</a>
-  </div>
+<!-- 페이징 -->
+<div class="pagination">
+  <a th:if="${postsPage.hasPrevious()}" th:href="@{/board/no-rooms(page=${postsPage.number - 1}, size=${postsPage.size})}">이전</a>
+  <span th:text="${postsPage.number + 1}"></span> / <span th:text="${postsPage.totalPages}"></span>
+  <a th:if="${postsPage.hasNext()}" th:href="@{/board/no-rooms(page=${postsPage.number + 1}, size=${postsPage.size})}">다음</a>
+</div>
+
+</div>
 
 </body>
 </html>
