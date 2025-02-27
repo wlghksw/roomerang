@@ -104,11 +104,15 @@
 
         /* ✅ 제목 스타일 */
         h1 {
-            font-size: 40px;
+            font-size: 35px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 10px; /* ✅ 여백 조정 */
-            margin-top: -10px;
+            margin-bottom: 10px;
+            margin-top: -30px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
         }
 
         /* ✅ 메타정보 (날짜, 조회수, 작성자) */
@@ -137,7 +141,10 @@
             display: flex;
             align-items: center; /* ✅ 세로 중앙 정렬 */
             justify-content: space-between; /* ✅ 간격 유지 */
-            gap: 10px; /* ✅ 제목과 찜 버튼 사이 여백 */
+            /*flex-wrap: wrap;*/
+            word-break: break-word;
+            overflow-wrap: break-word;
+            gap: 10px;
         }
 
         /* ✅ 찜 버튼 크기 및 스타일 */
@@ -152,7 +159,7 @@
             width: 28px; /* ✅ 찜 버튼 크기 조정 */
             height: 28px;
             cursor: pointer;
-            margin-top: -18pt;
+            margin-top: -18px;
             transition: transform 0.2s ease-in-out;
         }
 
@@ -400,12 +407,11 @@
             </div>
 
             <p class="post-meta">
-                <span th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}"></span> •
-                조회수 <span th:text="${post.postViews}"></span> •
-                작성자 <span th:text="${post.authorName}"></span>
+                작성자 <span th:text="${post.authorName}"></span> |
+                조회수 <span th:text="${post.postViews}"></span> |
+                등록 날짜 <span th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}"></span> |
+                지역 <span th:text="${post.authorRegion}"></span>
             </p>
-
-            <p><strong>주소 :</strong> <span th:text="${post.authorRegion}"></span></p>
 
             <div class="preference-wrapper">
                 <div class="preference-container">
@@ -423,9 +429,10 @@
 
             <!-- ✅ 월세, 보증금, 찜 버튼 -->
             <div class="post-price">
-                <span>월세: <span th:text="${post.amount}"></span> 만원</span>
-                <span>보증금: <span th:text="${post.deposit}"></span> 만원</span>
-        </div>
+                <span>월세: <span th:text="${post.amount}"></span>만원</span>
+                <span>보증금: <span th:text="${post.deposit}"></span>만원</span>
+            </div>
+
         </div>
     </div>
 
@@ -441,6 +448,14 @@
         <!-- ✅ 목록 버튼 (항상 표시) -->
         <a th:href="@{${post.category == '방 있음'} ? '/board/rooms' : '/board/no-rooms'}" class="btn btn-secondary">목록</a>
 
+        <!--채팅-->
+        <th:block th:if="${loginUser != null and post.userId != loginUser.username}">
+            <form th:action="@{/chat/start/{postId}(postId=${post.rmPostId})}" method="post">
+                <input type="hidden" name="type" value="matching">  <!— ✅ type 값 추가 —>
+                <button type="submit" class="btn btn-chat">채팅하기</button>
+            </form>
+        </th:block>
+
         <!-- ✅ 로그인한 사용자만 수정/삭제 가능 -->
         <th:block th:if="${loginUser != null and loginUser.username == post.userId}">
             <a th:href="@{/board/post/edit/{id}(id=${post.rmPostId})}" class="btn btn-primary">수정</a>
@@ -449,13 +464,6 @@
             </form>
         </th:block>
 
-        <!--채팅-->
-        <th:block th:if="${loginUser != null and post.userId != loginUser.username}">
-            <form th:action="@{/chat/start/{postId}(postId=${post.rmPostId})}" method="post">
-                <input type="hidden" name="type" value="matching">  <!— ✅ type 값 추가 —>
-                <button type="submit" class="btn btn-chat">채팅하기</button>
-            </form>
-        </th:block>
     </div>
   </div>
 
@@ -579,5 +587,6 @@
         modal.style.display = "none"; // ✅ 페이지가 로드될 때 모달을 숨김
     };
     </script>
+</div>
 </body>
 </html>

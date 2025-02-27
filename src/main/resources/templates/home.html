@@ -517,7 +517,10 @@
         <div class="icons">
             <a href="#" th:if="${session.loginUser == null}" onclick="alert('로그인 후 이용해주세요'); return false;">
                 <img th:src="@{/images/chat.png}" alt="채팅" style="display: inline"></a>
-            <a href="#"><img th:src="@{/images/alarm.png}" alt="알림"></a>
+
+            <a href="#" th:if="${session.loginUser == null}" onclick="alert('로그인 후 이용해주세요'); return false;">
+            <img th:src="@{/images/alarm.png}" alt="알림"></a>
+
             <a href="#" th:if="${session.loginUser == null}" onclick="alert('로그인 후 이용해주세요'); return false;">
                 <img th:src="@{/images/my-page.png}" alt="내정보" style="display: inline"></a>
         </div>

@@ -78,6 +78,7 @@ public class SharePostController {
         String postType="SHARE";
 
         post.setViewCount(post.getViewCount() + 1);
+        sharePostService.shareSavePost(post);
 
         // 로그인한 사용자 확인
         HttpSession session = request.getSession(false);

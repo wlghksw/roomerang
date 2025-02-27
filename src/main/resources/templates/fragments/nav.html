@@ -20,7 +20,9 @@
   <div class="header-right">
     <div class="icons">
       <a th:href="@{/chat/list}"><img th:src="@{/images/chat.png}" alt="채팅"></a>
-      <a href="#"><img th:src="@{/images/alarm.png}" alt="알림"></a>
+
+      <a href="#" onclick="alert('알람 기능은 업데이트 중입니다'); return false;">
+        <img th:src="@{/images/alarm.png}" alt="알림"></a>
 
       <!-- 로그인 여부에 따라 "내정보" 버튼 표시 -->
       <th:block th:if="${session.loginUser == null}">
@@ -45,7 +47,7 @@
         <div class="dropdown-content">
           <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">내 정보</a>
           <a th:href="@{/favorite/list(userId=${session.loginUser.id})}">관심 목록</a>
-          <a href="#">리뷰 보기</a>
+          <a href="#" onclick="alert('리뷰 기능은 업데이트 중입니다'); return false;">리뷰 보기</a>
           <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
           <form id="logoutForm" th:action="@{/auth/logout}" method="post" style="display: none;"></form>
         </div>
@@ -53,7 +55,7 @@
 
       <!-- 로그인하지 않은 경우 "로그인 해주세요" 표시 -->
       <th:block th:if="${session.loginUser == null}">
-        <a th:href="@{/auth/login}">로그인 해주세요</a>
+        <a th:href="@{/auth/login}" style="text-decoration: none; color: #777E90;">로그인 해주세요</a>
       </th:block>
     </div>
   </div>

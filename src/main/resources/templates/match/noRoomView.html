@@ -31,16 +31,24 @@
         /* ✅ 제목 + 찜 버튼 한 줄 정렬 */
         .title-container {
             display: flex;
-            align-items: center;
-            justify-content: flex-start;
+            align-items: center; /* ✅ 세로 중앙 정렬 */
+            justify-content: space-between; /* ✅ 간격 유지 */
+            /*flex-wrap: wrap;*/
+            word-break: break-word;
+            overflow-wrap: break-word;
             gap: 10px;
-            margin-bottom: 15px;
         }
 
         h1 {
-            font-size: 40px;
-            font-weight: bold;
-            margin: 0;
+            font-size: 35px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            margin-top: -10px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
         }
 
         /* ✅ 찜 버튼 */
@@ -161,8 +169,10 @@
         <!-- ✅ 제목 + 찜 버튼 -->
         <div class="title-container">
             <h1 th:text="${post.rmBoardTitle}"></h1>
+            <div class="wishlist-container">
             <img id="favorite-img" th:if = "${isFavorite == true}" th:src="@{/images/fullH.png}" alt="찜" class="wishlist" onclick="toggleFavorite()">
             <img id="favorite-img" th:unless = "${isFavorite == true}" th:src="@{/images/binH.png}" alt="찜" class="wishlist" onclick="toggleFavorite()">
+            </div>
         </div>
 
         <!-- ✅ 작성자 지역 -->

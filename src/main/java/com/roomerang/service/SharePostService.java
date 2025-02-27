@@ -121,4 +121,9 @@ public class SharePostService {
 
         sharePostRepository.deleteById(id);
     }
+
+    @Transactional
+    public void shareSavePost(SharePost sharePost) {
+        sharePostRepository.save(sharePost);
+    }
 }

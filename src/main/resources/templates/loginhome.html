@@ -515,7 +515,10 @@
     <div class="header-right">
         <div class="icons">
             <a th:href="@{/chat/list}"><img th:src="@{/images/chat.png}" alt="채팅"></a>
-            <a href="#"><img th:src="@{/images/alarm.png}" alt="알림"></a>
+
+            <a href="#" onclick="alert('알람 기능은 업데이트 중입니다'); return false;">
+            <img th:src="@{/images/alarm.png}" alt="알림"></a>
+
             <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">
                 <img th:src="@{/images/my-page.png}" alt="내정보"></a>
         </div>
@@ -525,9 +528,14 @@
             <img th:src="@{/images/plus.png}" alt="더보기" class="toggle-button">
             <div class="dropdown-content">
                 <a th:href="@{/users/myInfo(id=${session.loginUser.id})}">내 정보</a>
+
                 <a th:href="@{/favorite/list(userId=${session.loginUser.id})}">관심 목록</a>
-                <a href="#">리뷰 보기</a>
+
+
+                <a href="#" onclick="alert('리뷰 기능은 업데이트 중입니다'); return false;">리뷰 보기</a>
+
                 <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">로그아웃</a>
+
                 <form id="logoutForm" th:action="@{/auth/logout}" method="post" style="display: none;"></form>
             </div>
         </div>
